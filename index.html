@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Le Repère — Votre repère technique | Sonorisation et services audiovisuels à Québec</title>
+<meta name="description" content="Votre repère technique. Sonorisation et services audiovisuels à Québec, Lévis et environs. Forfaits tout inclus à partir de 395 $.">
+<meta property="og:title" content="Le Repère — Votre repère technique">
+<meta property="og:description" content="Sonorisation et services audiovisuels à Québec, Lévis et environs. Forfaits tout inclus à partir de 395 $.">
+<link rel="icon" type="image/svg+xml" href="assets/symbole-gris.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --vert:#233614; --vert-2:#2d4419; --orange:#9E5A00; --orange-clair:#E7C79A;
+  --charbon:#333333; --sable:#F4F1EA; --gris:#6B6B6B; --ligne:#DDD6C8;
+  --max:1120px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Inter",system-ui,sans-serif;color:var(--charbon);background:#fff;line-height:1.55;font-size:17px}
+h1,h2,h3,.btn,.eyebrow,nav a{font-family:"Montserrat",system-ui,sans-serif}
+a{color:inherit}
+img{max-width:100%;display:block}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
+
+/* En-tête */
+header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);border-bottom:1px solid #eee}
+.bar{display:flex;align-items:center;justify-content:space-between;height:88px}
+.bar img{height:56px}
+nav{display:flex;gap:28px;align-items:center}
+nav a{text-decoration:none;font-weight:600;font-size:14px;letter-spacing:.04em;color:var(--charbon)}
+nav a:hover{color:var(--orange)}
+nav .btn{padding:10px 18px;font-size:13px}
+@media (max-width:760px){nav a:not(.btn){display:none}.bar img{height:42px}}
+
+/* Boutons */
+.btn{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:700;font-size:15px;letter-spacing:.02em;padding:15px 26px;border-radius:999px;border:2px solid transparent;transition:.2s}
+.btn-orange{background:var(--orange);color:#fff}
+.btn-orange:hover{background:#87500a}
+.btn-contour{border-color:rgba(255,255,255,.55);color:#fff}
+.btn-contour:hover{background:rgba(255,255,255,.1)}
+.btn-vert{background:var(--vert);color:#fff}
+.btn-vert:hover{background:var(--vert-2)}
+
+/* Héros */
+.hero{background:var(--vert);color:#fff;position:relative;overflow:hidden}
+.hero .wrap{padding-top:96px;padding-bottom:104px}
+.hero .wrap>div{max-width:760px}
+.eyebrow{font-weight:700;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--orange-clair)}
+.hero h1{font-size:clamp(36px,5vw,58px);line-height:1.04;font-weight:800;margin:18px 0 22px}
+.hero p.lead{font-size:20px;max-width:46ch;opacity:.92}
+.hero .ctas{display:flex;gap:14px;flex-wrap:wrap;margin-top:34px}
+.hero .prix{margin-top:26px;font-size:15px;opacity:.8}
+.hero .prix b{color:var(--orange-clair)}
+@media (max-width:860px){.hero .wrap{padding-top:64px;padding-bottom:72px}}
+
+/* Promesses */
+.promesses{background:var(--sable)}
+.promesses .wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;padding-top:56px;padding-bottom:56px}
+.promesse h3{font-size:18px;color:var(--vert);margin-bottom:6px}
+.promesse p{color:#555;font-size:16px}
+.promesse .num{font-family:"Montserrat",system-ui,sans-serif;font-weight:800;color:var(--orange);font-size:14px;letter-spacing:.12em}
+@media (max-width:760px){.promesses .wrap{grid-template-columns:1fr;gap:22px}}
+
+/* Sections */
+section.bloc{padding:96px 0}
+.titre{max-width:640px;margin-bottom:48px}
+.titre h2{font-size:clamp(30px,4vw,42px);color:var(--vert);line-height:1.15;margin:12px 0 14px;font-weight:800}
+.titre p{color:#555;font-size:18px}
+.titre .eyebrow{color:var(--orange)}
+
+/* Forfaits */
+.cartes{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.carte{background:var(--sable);border-radius:14px;padding:30px 28px;display:flex;flex-direction:column}
+.carte .eyebrow{color:var(--gris);font-size:12px}
+.carte h3{font-size:22px;color:var(--vert);line-height:1.2;margin:6px 0 4px;min-height:2.4em}
+.carte .pourqui{color:var(--gris);font-size:15px;min-height:3em}
+.carte .prix{font-family:"Montserrat",system-ui,sans-serif;font-weight:800;color:var(--orange);font-size:44px;line-height:1;margin:20px 0 4px}
+.carte .prix small{font-size:14px;font-weight:600;color:var(--gris)}
+.carte .public{display:inline-block;background:var(--vert);color:#fff;border-radius:6px;padding:7px 12px;font-size:14px;margin:14px 0 18px;align-self:flex-start}
+.carte ul{list-style:none;display:grid;gap:9px;margin-bottom:22px}
+.carte li{padding-left:18px;position:relative;font-size:16px}
+.carte li::before{content:"";position:absolute;left:0;top:.6em;width:7px;height:7px;border-radius:50%;background:var(--orange)}
+.carte .plus{font-family:"Montserrat",system-ui,sans-serif;font-weight:600;color:var(--orange);font-size:15px;margin-bottom:18px}
+.carte .multi{margin-top:auto;border-top:1px solid var(--ligne);padding-top:16px;font-size:15px}
+.carte .multi b{color:var(--vert)}
+.carte.vedette{background:var(--vert);color:#fff}
+.carte.vedette h3,.carte.vedette .multi b{color:#fff}
+.carte.vedette .pourqui,.carte.vedette .eyebrow{color:rgba(255,255,255,.7)}
+.carte.vedette .prix{color:var(--orange-clair)}
+.carte.vedette .prix small{color:rgba(255,255,255,.7)}
+.carte.vedette .public{background:var(--orange)}
+.carte.vedette .plus{color:var(--orange-clair)}
+.carte.vedette .multi{border-color:rgba(255,255,255,.2)}
+.carte .badge{color:var(--orange-clair)}
+.carte.vedette{box-shadow:0 18px 40px rgba(35,54,20,.28);transform:translateY(-6px)}
+.sous-cartes{margin-top:26px;display:flex;gap:16px;flex-wrap:wrap;align-items:center;color:#555}
+@media (max-width:900px){.cartes{grid-template-columns:1fr}.carte h3,.carte .pourqui{min-height:0}}
+
+/* Étapes */
+.etapes{background:var(--sable)}
+.liste-etapes{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;counter-reset:e}
+.etape{background:#fff;border-radius:14px;padding:26px 24px}
+.etape::before{counter-increment:e;content:counter(e);display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--vert);color:#fff;font-family:"Montserrat",system-ui,sans-serif;font-weight:800;margin-bottom:16px}
+.etape h3{font-size:17px;color:var(--vert);margin-bottom:6px}
+.etape p{font-size:15px;color:#555}
+@media (max-width:900px){.liste-etapes{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.liste-etapes{grid-template-columns:1fr}}
+
+/* Bon à savoir */
+.savoir{display:grid;grid-template-columns:1fr 1fr;gap:20px 48px}
+.savoir div{border-left:3px solid var(--orange);padding-left:16px}
+.savoir h3{font-size:16px;color:var(--vert);margin-bottom:4px}
+.savoir p{font-size:15.5px;color:#555}
+@media (max-width:760px){.savoir{grid-template-columns:1fr}}
+
+/* Contact */
+.contact{background:var(--vert);color:#fff;position:relative;overflow:hidden}
+.contact .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center;padding-top:96px;padding-bottom:96px}
+.contact h2{font-size:clamp(32px,4.5vw,48px);line-height:1.1;font-weight:800;margin:12px 0 16px}
+.contact p{opacity:.9;font-size:18px;max-width:40ch}
+.contact .eyebrow{color:var(--orange-clair)}
+.coord{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:30px;display:grid;gap:14px}
+.coord a.ligne{display:flex;justify-content:space-between;align-items:center;gap:12px;text-decoration:none;background:rgba(255,255,255,.07);border-radius:10px;padding:16px 18px;transition:.2s}
+.coord a.ligne:hover{background:rgba(255,255,255,.14)}
+.coord .k{font-family:"Montserrat",system-ui,sans-serif;font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--orange-clair)}
+.coord .v{font-size:17px;font-weight:600}
+.coord .fl{opacity:.6}
+.coord a.principal{background:var(--orange);padding:22px 22px}
+.coord a.principal:hover{background:#87500a}
+.coord a.principal .k{color:#fff;opacity:.85}
+.coord a.principal .v{font-size:20px}
+.coord .aide{font-size:15px;opacity:.85}
+.coord .rapide{font-size:14px;opacity:.7;border-top:1px solid rgba(255,255,255,.15);padding-top:14px}
+.coord .rapide a{color:#fff}
+@media (max-width:860px){.contact .wrap{grid-template-columns:1fr}}
+
+footer{background:#18250e;color:rgba(255,255,255,.75);font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;padding-top:28px;padding-bottom:28px}
+footer img{height:30px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap bar">
+    <a href="#" aria-label="Le Repère — accueil"><img src="assets/logo-horizontal-gris.svg" alt="Le Repère"></a>
+    <nav>
+      <a href="#forfaits">Forfaits</a>
+      <a href="#fonctionnement">Comment ça marche</a>
+      <a href="#savoir">Bon à savoir</a>
+      <a href="#contact" class="btn btn-orange">Soumission</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow">Votre repère technique</div>
+      <h1>On s'occupe du son, vous profitez de l'événement.</h1>
+      <p class="lead">Sonorisation et services audiovisuels pour vos événements : l'équipement est livré, installé et testé par notre équipe. Des prix affichés, tout inclus, sans surprise.</p>
+      <div class="ctas">
+        <a class="btn btn-orange" href="#forfaits">Voir les forfaits</a>
+        <a class="btn btn-contour" href="mailto:contact@lerepere.info?subject=Demande%20de%20soumission">Demander une soumission</a>
+      </div>
+      <p class="prix">Forfaits à partir de <b>395 $ tout inclus</b> · Québec, Lévis et environs</p>
+    </div>
+  </div>
+</section>
+
+<section class="promesses" aria-label="Pourquoi Le Repère">
+  <div class="wrap">
+    <div class="promesse"><div class="num">01</div><h3>Toujours livré et installé</h3><p>Pas de location à ramasser : on apporte, on installe, on teste, puis on démonte.</p></div>
+    <div class="promesse"><div class="num">02</div><h3>Prix affichés, tout inclus</h3><p>Équipement, main-d'œuvre et transport compris. Aucune taxe facturée.</p></div>
+    <div class="promesse"><div class="num">03</div><h3>Des discours qui s'entendent</h3><p>Micros sans fil fiables et micro de secours, pour que tout le monde entende bien.</p></div>
+  </div>
+</section>
+
+<section class="bloc" id="forfaits">
+  <div class="wrap">
+    <div class="titre">
+      <div class="eyebrow">Forfaits 2026-2027</div>
+      <h2>3 forfaits clairs, jusqu'à 150 personnes</h2>
+      <p>Plus de 150 personnes ou un band complet ? Écrivez-nous : on vous prépare une soumission sur mesure.</p>
+    </div>
+
+    <div class="cartes">
+      <article class="carte">
+        <div class="eyebrow">Forfait</div>
+        <h3>DJ / party</h3>
+        <p class="pourqui">Fêtes, partys de bureau et soirées DJ</p>
+        <div class="prix">395&nbsp;$ <small>/ événement</small></div>
+        <span class="public">Jusqu'à 150 personnes</span>
+        <ul>
+          <li>Équipement de sonorisation</li>
+          <li>Éclairage d'ambiance</li>
+          <li>Livraison, installation et vérification avant l'événement</li>
+          <li>On revient démonter après, sans technicien pendant la soirée</li>
+        </ul>
+        <p class="plus">Prêt à brancher : votre DJ n'a qu'à arriver.</p>
+        <div class="multi"><b>Plusieurs jours</b><br>Fin de semaine : <b>465&nbsp;$</b> · Semaine : <b>600&nbsp;$</b></div>
+      </article>
+
+      <article class="carte">
+        <div class="eyebrow">Forfait</div>
+        <h3>Conférence / corporatif</h3>
+        <p class="pourqui">Conférences, assemblées, galas, lancements</p>
+        <div class="prix">665&nbsp;$ <small>/ événement</small></div>
+        <span class="public">Jusqu'à 150 personnes</span>
+        <ul>
+          <li>Équipement de sonorisation, avec micros sans fil</li>
+          <li>Éclairage de scène</li>
+          <li>Équipement vidéo pour vos présentations (projecteur et écran fournis par la salle)</li>
+          <li>Technicien sur place, maximum 8&nbsp;h</li>
+        </ul>
+        <p class="plus">Micro de secours toujours inclus.</p>
+        <div class="multi"><b>Plusieurs jours</b><br>2 jours : <b>1&nbsp;130&nbsp;$</b> · 5 jours : <b>2&nbsp;375&nbsp;$</b></div>
+      </article>
+
+      <article class="carte vedette">
+        <div class="eyebrow">Forfait · <span class="badge">Notre spécialité</span></div>
+        <h3>Spectacle trio musical</h3>
+        <p class="pourqui">Petits concerts, par exemple un trio jazz (3 musiciens max.)</p>
+        <div class="prix">1&nbsp;150&nbsp;$ <small>/ événement</small></div>
+        <span class="public">Jusqu'à 150 personnes</span>
+        <ul>
+          <li>Sonorisation complète, avec moniteurs de scène et micros pour le groupe</li>
+          <li>Éclairage de scène complet</li>
+          <li>Technicien sur place, maximum 10&nbsp;h</li>
+        </ul>
+        <p class="plus">Test de son avec les musiciens avant le spectacle.</p>
+        <div class="multi"><b>Band ou groupe plus gros ?</b><br>Prix évalué selon vos besoins, sur soumission.</div>
+      </article>
+    </div>
+
+    <div class="sous-cartes">
+      <a class="btn btn-vert" href="https://www.icloud.com/iclouddrive/0e05OpDGQawcqjlkL5VZY77ug">Télécharger la fiche des forfaits (PDF)</a>
+      <span>Aucune taxe facturée · Prix 2026-2027</span>
+    </div>
+  </div>
+</section>
+
+<section class="bloc etapes" id="fonctionnement">
+  <div class="wrap">
+    <div class="titre">
+      <div class="eyebrow">Comment ça marche</div>
+      <h2>De la soumission au démontage</h2>
+    </div>
+    <div class="liste-etapes">
+      <div class="etape"><h3>Écrivez-nous</h3><p>Indiquez-nous la date, le lieu, le type d'événement et le nombre de personnes.</p></div>
+      <div class="etape"><h3>Recevez la soumission</h3><p>Un prix clair, tout inclus, envoyé par courriel.</p></div>
+      <div class="etape"><h3>Confirmez et réservez</h3><p>Un dépôt de 30&nbsp;% confirme votre date.</p></div>
+      <div class="etape"><h3>On s'occupe du reste</h3><p>Livraison, installation, tests, opération si prévue, puis démontage.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="bloc" id="savoir">
+  <div class="wrap">
+    <div class="titre">
+      <div class="eyebrow">Bon à savoir</div>
+      <h2>Les petites lignes, en clair</h2>
+    </div>
+    <div class="savoir">
+      <div><h3>Transport inclus</h3><p>Dans un rayon de 30 km du centre-ville de Québec. Au-delà : à partir de 0,50 $/km plus le temps de route.</p></div>
+      <div><h3>Heures supplémentaires</h3><p>40 $ l'heure au-delà des heures prévues au forfait.</p></div>
+      <div><h3>Réservation et annulation</h3><p>Un dépôt de 30&nbsp;% confirme votre date. Il n'est pas remboursable si l'annulation survient moins de 48&nbsp;h avant l'événement.</p></div>
+      <div><h3>Électricité</h3><p>Des prises de 15 A près de la scène, idéalement sur des circuits séparés.</p></div>
+      <div><h3>Événement extérieur</h3><p>Un abri pour l'équipement, fourni par le client, est obligatoire.</p></div>
+      <div><h3>Plus de 150 personnes ?</h3><p>Le prix est déterminé selon vos besoins, sur soumission.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow">Réserver une date</div>
+      <h2>Parlons de votre événement.</h2>
+      <p>Québec, Lévis et environs, et ailleurs au Québec sur demande. On vous répond rapidement avec un prix clair.</p>
+    </div>
+    <div class="coord">
+      <a class="ligne principal" href="mailto:contact@lerepere.info?subject=Demande%20de%20soumission"><span><span class="k">Écrivez-nous</span><br><span class="v">contact@lerepere.info</span></span><span class="fl">→</span></a>
+      <p class="aide">Indiquez la date, le lieu, le type d'événement et le nombre de personnes : on vous répond avec une soumission claire par courriel.</p>
+      <p class="rapide">Pour une question rapide, contactez Gabriel par <a href="sms:+14504211285">texto</a> ou <a href="tel:+14504211285">appel</a> au 450&nbsp;421-1285</p>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <img src="assets/logo-horizontal-blanc.svg" alt="Le Repère">
+    <span>Contact : <a href="tel:+14504211285">450&nbsp;421-1285</a> · <a href="mailto:contact@lerepere.info">contact@lerepere.info</a></span>
+    <span>Aucune taxe facturée · Prix 2026-2027 · © 2026 Le Repère</span>
+  </div>
+</footer>
+
+</body>
+</html>
