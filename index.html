@@ -147,6 +147,10 @@ section.bloc{padding:96px 0}
 .champs label[hidden]{display:none}
 .formulaire select{-webkit-appearance:none;appearance:none;min-height:50px;padding-right:40px;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239E5A00' stroke-width='2' fill='none'/%3E%3C/svg%3E") no-repeat right 16px center}
 .formulaire select:invalid{color:#8a8a8a}
+.estimation{background:var(--sable);border-left:4px solid var(--orange);border-radius:10px;padding:14px 18px;font-size:15px;line-height:1.45}
+.estimation b.m{font-family:"Montserrat",system-ui,sans-serif;font-size:22px;color:var(--orange);font-weight:800}
+.estimation small{display:block;color:var(--gris);font-size:13.5px;margin-top:2px}
+.estimation[hidden]{display:none}
 .aide-champ{font-size:13.5px;color:var(--gris);line-height:1.4}
 .formulaire input[type=date],.formulaire input[type=time]{-webkit-appearance:none;appearance:none;display:block;min-width:0;max-width:100%;min-height:50px;text-align:left}
 .formulaire input[type=date]::-webkit-date-and-time-value,.formulaire input[type=time]::-webkit-date-and-time-value{text-align:left}
@@ -314,10 +318,10 @@ footer img{height:30px}
       <fieldset>
         <legend>Forfait souhaité</legend>
         <div class="choix">
-          <label><input type="radio" name="Forfait" value="DJ / party : 395 $ / événement (prix 2026-2027)" required><span><b>DJ / party</b><small>395 $ · audience jusqu'à 150 pers.</small></span></label>
-          <label><input type="radio" name="Forfait" value="Conférence / corporatif : 665 $ / événement (prix 2026-2027)"><span><b>Conférence / corporatif</b><small>665 $ · audience jusqu'à 150 pers.</small></span></label>
-          <label><input type="radio" name="Forfait" value="Spectacle trio musical : 1 150 $ / événement (prix 2026-2027)"><span><b>Spectacle trio musical</b><small>1 150 $ · audience jusqu'à 150 pers.</small></span></label>
-          <label><input type="radio" name="Forfait" value="Forfait personnalisé : prix sur soumission"><span><b>Forfait personnalisé</b><small>Audience de plus de 150 pers., band, autre besoin</small></span></label>
+          <label><input type="radio" name="Forfait" value="DJ / party" data-cle="dj" required><span><b>DJ / party</b><small><span class="px">395 $</span> · audience jusqu'à 150 pers.</small></span></label>
+          <label><input type="radio" name="Forfait" value="Conférence / corporatif" data-cle="conf"><span><b>Conférence / corporatif</b><small><span class="px">665 $</span> · audience jusqu'à 150 pers.</small></span></label>
+          <label><input type="radio" name="Forfait" value="Spectacle trio musical" data-cle="trio"><span><b>Spectacle trio musical</b><small><span class="px">1 150 $</span> · audience jusqu'à 150 pers.</small></span></label>
+          <label><input type="radio" name="Forfait" value="Forfait personnalisé" data-cle="perso"><span><b>Forfait personnalisé</b><small>Audience de plus de 150 pers., band, autre besoin</small></span></label>
         </div>
       </fieldset>
 
@@ -329,15 +333,17 @@ footer img{height:30px}
         <label><span>Téléphone <em class="opt">(facultatif)</em></span><input type="tel" name="Téléphone" autocomplete="tel"></label>
         <label><span>Date de l'événement</span><input type="date" name="Date de l'événement" id="date-evenement" required><small class="aide-champ">Au moins 5 jours à l'avance. La date n'est pas garantie : on vous confirme sa disponibilité par courriel. Plus urgent ? Texto ou appel.</small></label>
         <label><span>Heure de début</span><input type="time" name="Heure de début" required></label>
-        <label><span>Durée approximative</span><select name="Durée approximative" required>
+        <label><span>Durée approximative</span><select name="Durée approximative" id="duree" required>
           <option value="" disabled selected>Choisir…</option>
-          <option>Moins de 2 h</option><option>2 à 4 h</option><option>4 à 6 h</option><option>6 à 8 h</option><option>8 à 10 h</option><option>Plus de 10 h</option><option>Je ne sais pas encore</option>
+          <option data-p="base">1 h</option><option data-p="base">2 h</option><option data-p="base">3 h</option><option data-p="base">4 h et plus</option><option data-p="base">1 journée</option><option data-p="j2">2 jours et plus</option><option data-p="sem">1 semaine ou plus</option>
         </select></label>
         <label><span>Lieu de l'événement</span><input type="text" name="Lieu" placeholder="Salle, ville" required></label>
         <label><span>Taille de l'audience</span><input type="number" name="Taille de l'audience" min="1" inputmode="numeric" placeholder="Nombre de personnes" required></label>
         <label class="large"><span>Vos besoins</span><textarea name="Besoins" placeholder="Type d'événement, horaire, nombre de micros, musiciens, questions…"></textarea></label>
       </div>
 
+      <input type="hidden" name="Prix affiché" id="prix-affiche">
+      <div class="estimation" id="estimation" hidden></div>
       <button type="submit" class="btn btn-orange">Envoyer ma demande</button>
       <p class="statut" id="statut" role="status" aria-live="polite"></p>
     </form>
@@ -355,6 +361,7 @@ footer img{height:30px}
 
 <script>
 (function(){
+  var f=document.getElementById('formulaire'),st=document.getElementById('statut'),btn=f.querySelector('button');
   var cb=document.getElementById('est-entreprise'),ch=document.getElementById('champ-entreprise'),ent=ch.querySelector('input'),lib=document.getElementById('libelle-nom');
   function maj(){var on=cb.checked;ch.hidden=!on;ent.disabled=!on;ent.required=on;lib.textContent=on?'Prénom et nom du contact':'Prénom et nom';if(!on)ent.value='';}
   cb.addEventListener('change',maj);
@@ -363,9 +370,37 @@ footer img{height:30px}
   de.min=min;
   function verif(){de.setCustomValidity(de.value&&de.value<min?'Choisissez une date au moins 5 jours à l\u2019avance. Pour un besoin urgent, contactez-nous par texto ou appel.':'')}
   de.addEventListener('input',verif);de.addEventListener('change',verif);
-})();
-(function(){
-  var f=document.getElementById('formulaire'),st=document.getElementById('statut'),btn=f.querySelector('button');
+
+  // Prix selon le forfait et la durée (prix 2026-2027) : modifier ici au besoin
+  var PRIX={
+    dj:  {nom:'DJ / party',base:[395,'/ événement'],j2:[465,'fin de semaine'],sem:[600,'semaine']},
+    conf:{nom:'Conférence / corporatif',base:[665,'/ événement'],j2:[1130,'2 jours'],sem:[2375,'5 jours']},
+    trio:{nom:'Spectacle trio musical',base:[1150,'/ événement']},
+    perso:{nom:'Forfait personnalisé'}
+  };
+  var du=document.getElementById('duree'),est=document.getElementById('estimation'),pa=document.getElementById('prix-affiche');
+  function m(n){return n.toLocaleString('fr-CA')+' $'}
+  function cat(){var o=du.options[du.selectedIndex];return (o&&o.dataset.p)||'base'}
+  function prix(cle){var p=PRIX[cle],c=cat();return p&&p[c]?{v:p[c][0],u:p[c][1],dep:c!=='base'}:null}
+  function majPrix(){
+    f.querySelectorAll('input[name=Forfait]').forEach(function(r){
+      var x=prix(r.dataset.cle),el=r.parentNode.querySelector('.px');
+      if(el)el.textContent=x?(x.dep?'À partir de ':'')+m(x.v)+(x.dep?' ('+x.u+')':''):'Sur soumission';
+    });
+    var r=f.querySelector('input[name=Forfait]:checked');
+    if(!r){est.hidden=true;pa.value='';return}
+    var x=prix(r.dataset.cle),nom=PRIX[r.dataset.cle].nom;
+    est.hidden=false;
+    if(x){
+      est.innerHTML='Prix estimé : '+(x.dep?'à partir de ':'')+'<b class="m">'+m(x.v)+'</b> '+(x.dep?'('+x.u+')':x.u)+'<small>'+nom+' · tout inclus, aucune taxe · prix 2026-2027. Le prix final est confirmé dans votre soumission.</small>';
+      pa.value=(x.dep?'À partir de ':'')+m(x.v)+' ('+(x.dep?x.u:'1 événement')+') · '+nom+' · prix 2026-2027';
+    }else{
+      est.innerHTML='Prix estimé : <b class="m">sur soumission</b><small>'+nom+' · on vous prépare un prix selon vos besoins.</small>';
+      pa.value='Sur soumission · '+nom;
+    }
+  }
+  f.addEventListener('change',majPrix);
+
   f.addEventListener('submit',function(e){
     e.preventDefault();
     btn.disabled=true;btn.textContent='Envoi en cours…';st.className='statut';
@@ -375,6 +410,7 @@ footer img{height:30px}
         if(!d.success)throw new Error(d.message);
         f.reset();
         document.getElementById('est-entreprise').dispatchEvent(new Event('change'));
+        majPrix();
         st.className='statut ok';
         st.textContent='Merci ! Votre demande est bien envoyée. On vérifie la disponibilité de la date et on vous répond rapidement par courriel.';
       })
