@@ -162,6 +162,7 @@ section.bloc{padding:96px 0}
 .statut.ok{display:block;background:#EAF1E3;color:var(--vert)}
 .statut.erreur{display:block;background:#FBEDE6;color:#8a2c0d}
 .statut a{color:inherit}
+.aide-champ.alerte{color:#b3261e;font-weight:600}
 .formulaire .invalide,.formulaire .choix.invalide label{border-color:#b3261e!important}
 .formulaire .choix.invalide{outline:none}
 @media (max-width:960px){.contact .wrap{grid-template-columns:1fr;gap:40px}}
@@ -370,7 +371,8 @@ footer img{height:30px}
   var de=document.getElementById('date-evenement'),d=new Date();d.setDate(d.getDate()+5);
   var min=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
   de.min=min;
-  function verif(){de.setCustomValidity(de.value&&de.value<min?'Choisissez une date au moins 5 jours à l\u2019avance. Pour un besoin urgent, contactez-nous par texto ou appel.':'')}
+  var aide=de.parentNode.querySelector('.aide-champ');
+  function verif(){var bad=!!(de.value&&de.value<min);de.setCustomValidity(bad?'Choisissez une date au moins 5 jours à l\u2019avance. Pour un besoin urgent, contactez-nous par texto ou appel.':'');de.classList.toggle('invalide',bad);aide.classList.toggle('alerte',bad)}
   de.addEventListener('input',verif);de.addEventListener('change',verif);
 
   // Prix selon le forfait et la durée (prix 2026-2027) : modifier ici au besoin
