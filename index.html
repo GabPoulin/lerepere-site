@@ -139,16 +139,18 @@ section.bloc{padding:96px 0}
 .champs{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start;gap:16px}
 .champs .large{grid-column:1/-1}
 .champs label{display:grid;gap:6px}
-.formulaire input:not([type=radio]):not([type=checkbox]),.formulaire textarea{font:inherit;font-size:16px;color:var(--charbon);border:1.5px solid var(--ligne);border-radius:10px;padding:12px 14px;background:#fff;width:100%}
+.formulaire input:not([type=radio]):not([type=checkbox]),.formulaire textarea,.formulaire select{font:inherit;font-size:16px;color:var(--charbon);border:1.5px solid var(--ligne);border-radius:10px;padding:12px 14px;background:#fff;width:100%}
 .formulaire textarea{min-height:120px;resize:vertical}
 .champs label{min-width:0}
 .formulaire .champs label.case{display:flex;align-items:center;gap:10px;font-size:15px;cursor:pointer;color:var(--charbon)}
 .case input{accent-color:var(--orange);width:18px;height:18px;flex:none}
 .champs label[hidden]{display:none}
+.formulaire select{-webkit-appearance:none;appearance:none;min-height:50px;padding-right:40px;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239E5A00' stroke-width='2' fill='none'/%3E%3C/svg%3E") no-repeat right 16px center}
+.formulaire select:invalid{color:#8a8a8a}
 .aide-champ{font-size:13.5px;color:var(--gris);line-height:1.4}
 .formulaire input[type=date],.formulaire input[type=time]{-webkit-appearance:none;appearance:none;display:block;min-width:0;max-width:100%;min-height:50px;text-align:left}
 .formulaire input[type=date]::-webkit-date-and-time-value,.formulaire input[type=time]::-webkit-date-and-time-value{text-align:left}
-.formulaire input:not([type=radio]):not([type=checkbox]):focus,.formulaire textarea:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(158,90,0,.15)}
+.formulaire input:not([type=radio]):not([type=checkbox]):focus,.formulaire textarea:focus,.formulaire select:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(158,90,0,.15)}
 .formulaire button{justify-self:center;cursor:pointer;font-size:15px}
 .formulaire button:disabled{opacity:.6;cursor:wait}
 .formulaire .piege{position:absolute;left:-9999px}
@@ -327,7 +329,10 @@ footer img{height:30px}
         <label><span>Téléphone <em class="opt">(facultatif)</em></span><input type="tel" name="Téléphone" autocomplete="tel"></label>
         <label><span>Date de l'événement</span><input type="date" name="Date de l'événement" id="date-evenement" required><small class="aide-champ">Au moins 5 jours à l'avance. La date n'est pas garantie : on vous confirme sa disponibilité par courriel. Plus urgent ? Texto ou appel.</small></label>
         <label><span>Heure de début</span><input type="time" name="Heure de début" required></label>
-        <label><span>Heure de fin <em class="opt">(approx.)</em></span><input type="time" name="Heure de fin"></label>
+        <label><span>Durée approximative</span><select name="Durée approximative" required>
+          <option value="" disabled selected>Choisir…</option>
+          <option>Moins de 2 h</option><option>2 à 4 h</option><option>4 à 6 h</option><option>6 à 8 h</option><option>8 à 10 h</option><option>Plus de 10 h</option><option>Je ne sais pas encore</option>
+        </select></label>
         <label><span>Lieu de l'événement</span><input type="text" name="Lieu" placeholder="Salle, ville" required></label>
         <label><span>Taille de l'audience</span><input type="number" name="Taille de l'audience" min="1" inputmode="numeric" placeholder="Nombre de personnes" required></label>
         <label class="large"><span>Vos besoins</span><textarea name="Besoins" placeholder="Type d'événement, horaire, nombre de micros, musiciens, questions…"></textarea></label>
