@@ -162,6 +162,8 @@ section.bloc{padding:96px 0}
 .statut.ok{display:block;background:#EAF1E3;color:var(--vert)}
 .statut.erreur{display:block;background:#FBEDE6;color:#8a2c0d}
 .statut a{color:inherit}
+.formulaire .invalide,.formulaire .choix.invalide label{border-color:#b3261e!important}
+.formulaire .choix.invalide{outline:none}
 @media (max-width:960px){.contact .wrap{grid-template-columns:1fr;gap:40px}}
 @media (max-width:560px){.choix,.champs{grid-template-columns:1fr}.formulaire{padding:24px 20px}}
 
@@ -311,7 +313,7 @@ footer img{height:30px}
       <p>Québec, Lévis et environs, et ailleurs au Québec sur demande. Remplissez le formulaire : on vous répond rapidement avec une soumission claire par courriel.</p>
       <p class="rapide">Pour une question rapide, contactez Gabriel par <a href="sms:+14504211285">message texte</a>, ou <a href="tel:+14504211285">appelez-nous</a></p>
     </div>
-    <form class="formulaire" id="formulaire" action="https://api.web3forms.com/submit" method="POST">
+    <form class="formulaire" id="formulaire" action="https://api.web3forms.com/submit" method="POST" novalidate>
       <input type="hidden" name="access_key" value="5164a566-56f0-4053-a9b0-da836d557cff">
       <input type="checkbox" name="botcheck" class="piege" tabindex="-1" autocomplete="off" aria-hidden="true">
 
@@ -402,8 +404,34 @@ footer img{height:30px}
   }
   f.addEventListener('change',majPrix);
 
+  function nomChamp(el){
+    if(el.type==='radio')return 'forfait souhaité';
+    var l=el.closest('label'),sp=l&&l.querySelector('span');
+    return sp?sp.childNodes[0].textContent.trim().toLowerCase():el.name;
+  }
+  function marquer(el,on){var c=el.type==='radio'?el.closest('.choix'):el;if(c)c.classList.toggle('invalide',on)}
+  f.addEventListener('input',function(e){if(e.target.checkValidity&&e.target.checkValidity())marquer(e.target,false)});
+  f.addEventListener('change',function(e){if(e.target.checkValidity&&e.target.checkValidity())marquer(e.target,false)});
+
   f.addEventListener('submit',function(e){
     e.preventDefault();
+    verif();
+    var manquants=[],premier=null,vus={};
+    Array.prototype.forEach.call(f.elements,function(el){
+      if(!el.willValidate||el.checkValidity()){if(el.willValidate)marquer(el,false);return}
+      marquer(el,true);
+      if(!premier)premier=el;
+      var n=el===de&&de.value?'date (au moins 5 jours à l\u2019avance)':nomChamp(el);
+      if(!vus[n]){vus[n]=1;manquants.push(n)}
+    });
+    if(premier){
+      st.className='statut erreur';
+      st.textContent='Il manque des informations ou une information est invalide : '+manquants.join(', ')+'.';
+      var cible=premier.type==='radio'?premier.closest('fieldset'):premier.closest('label')||premier;
+      cible.scrollIntoView({behavior:'smooth',block:'center'});
+      try{premier.focus({preventScroll:true})}catch(_){}
+      return;
+    }
     btn.disabled=true;btn.textContent='Envoi en cours…';st.className='statut';
     fetch(f.action,{method:'POST',headers:{'Accept':'application/json'},body:new FormData(f)})
       .then(function(r){return r.json()})
