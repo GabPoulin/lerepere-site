@@ -136,12 +136,18 @@ section.bloc{padding:96px 0}
 .choix input{accent-color:var(--orange);margin-top:3px;flex:none;width:17px;height:17px}
 .choix b{display:block;color:var(--vert);font-family:"Montserrat",system-ui,sans-serif;font-size:14.5px}
 .choix small{color:var(--gris);font-size:13px}
-.champs{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.champs{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
 .champs .large{grid-column:1/-1}
 .champs label{display:grid;gap:6px}
-.formulaire input:not([type=radio]),.formulaire textarea{font:inherit;font-size:16px;color:var(--charbon);border:1.5px solid var(--ligne);border-radius:10px;padding:12px 14px;background:#fff;width:100%}
+.formulaire input:not([type=radio]):not([type=checkbox]),.formulaire textarea{font:inherit;font-size:16px;color:var(--charbon);border:1.5px solid var(--ligne);border-radius:10px;padding:12px 14px;background:#fff;width:100%}
 .formulaire textarea{min-height:120px;resize:vertical}
-.formulaire input:not([type=radio]):focus,.formulaire textarea:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(158,90,0,.15)}
+.champs label{min-width:0}
+.formulaire .champs label.case{display:flex;align-items:center;gap:10px;font-size:15px;cursor:pointer;color:var(--charbon)}
+.case input{accent-color:var(--orange);width:18px;height:18px;flex:none}
+.champs label[hidden]{display:none}
+.formulaire input[type=date]{-webkit-appearance:none;appearance:none;display:block;min-width:0;max-width:100%;min-height:50px;text-align:left}
+.formulaire input[type=date]::-webkit-date-and-time-value{text-align:left}
+.formulaire input:not([type=radio]):not([type=checkbox]):focus,.formulaire textarea:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(158,90,0,.15)}
 .formulaire button{justify-self:start;cursor:pointer;font-size:15px}
 .formulaire button:disabled{opacity:.6;cursor:wait}
 .formulaire .piege{position:absolute;left:-9999px}
@@ -307,21 +313,23 @@ footer img{height:30px}
       <fieldset>
         <legend>Forfait souhaité</legend>
         <div class="choix">
-          <label><input type="radio" name="forfait" value="DJ / party" required><span><b>DJ / party</b><small>395 $ · jusqu'à 150 pers.</small></span></label>
-          <label><input type="radio" name="forfait" value="Conférence / corporatif"><span><b>Conférence / corporatif</b><small>665 $ · jusqu'à 150 pers.</small></span></label>
-          <label><input type="radio" name="forfait" value="Spectacle trio musical"><span><b>Spectacle trio musical</b><small>1 150 $ · jusqu'à 150 pers.</small></span></label>
-          <label><input type="radio" name="forfait" value="Forfait personnalisé"><span><b>Forfait personnalisé</b><small>Plus de 150 pers., band, autre besoin</small></span></label>
+          <label><input type="radio" name="Forfait" value="DJ / party : 395 $ / événement (prix 2026-2027)" required><span><b>DJ / party</b><small>395 $ · jusqu'à 150 pers.</small></span></label>
+          <label><input type="radio" name="Forfait" value="Conférence / corporatif : 665 $ / événement (prix 2026-2027)"><span><b>Conférence / corporatif</b><small>665 $ · jusqu'à 150 pers.</small></span></label>
+          <label><input type="radio" name="Forfait" value="Spectacle trio musical : 1 150 $ / événement (prix 2026-2027)"><span><b>Spectacle trio musical</b><small>1 150 $ · jusqu'à 150 pers.</small></span></label>
+          <label><input type="radio" name="Forfait" value="Forfait personnalisé : prix sur soumission"><span><b>Forfait personnalisé</b><small>Plus de 150 pers., band, autre besoin</small></span></label>
         </div>
       </fieldset>
 
       <div class="champs">
-        <label><span>Nom</span><input type="text" name="nom" autocomplete="name" required></label>
+        <label class="large case"><input type="checkbox" id="est-entreprise"> Je fais la demande pour une entreprise</label>
+        <label class="large" id="champ-entreprise" hidden><span>Nom de l'entreprise</span><input type="text" name="Entreprise" autocomplete="organization" disabled></label>
+        <label><span id="libelle-nom">Prénom et nom</span><input type="text" name="Prénom et nom" autocomplete="name" required></label>
         <label><span>Courriel</span><input type="email" name="email" autocomplete="email" required></label>
-        <label><span>Téléphone <em class="opt">(facultatif)</em></span><input type="tel" name="telephone" autocomplete="tel"></label>
-        <label><span>Date de l'événement</span><input type="date" name="date" required></label>
-        <label><span>Lieu de l'événement</span><input type="text" name="lieu" placeholder="Salle, ville" required></label>
-        <label><span>Nombre de personnes</span><input type="number" name="personnes" min="1" inputmode="numeric" required></label>
-        <label class="large"><span>Vos besoins</span><textarea name="message" placeholder="Type d'événement, horaire, nombre de micros, musiciens, questions…"></textarea></label>
+        <label><span>Téléphone <em class="opt">(facultatif)</em></span><input type="tel" name="Téléphone" autocomplete="tel"></label>
+        <label><span>Date de l'événement</span><input type="date" name="Date de l'événement" required></label>
+        <label><span>Lieu de l'événement</span><input type="text" name="Lieu" placeholder="Salle, ville" required></label>
+        <label><span>Nombre de personnes</span><input type="number" name="Nombre de personnes" min="1" inputmode="numeric" required></label>
+        <label class="large"><span>Vos besoins</span><textarea name="Besoins" placeholder="Type d'événement, horaire, nombre de micros, musiciens, questions…"></textarea></label>
       </div>
 
       <button type="submit" class="btn btn-orange">Envoyer ma demande</button>
@@ -341,6 +349,11 @@ footer img{height:30px}
 
 <script>
 (function(){
+  var cb=document.getElementById('est-entreprise'),ch=document.getElementById('champ-entreprise'),ent=ch.querySelector('input'),lib=document.getElementById('libelle-nom');
+  function maj(){var on=cb.checked;ch.hidden=!on;ent.disabled=!on;ent.required=on;lib.textContent=on?'Prénom et nom du contact':'Prénom et nom';if(!on)ent.value='';}
+  cb.addEventListener('change',maj);
+})();
+(function(){
   var f=document.getElementById('formulaire'),st=document.getElementById('statut'),btn=f.querySelector('button');
   f.addEventListener('submit',function(e){
     e.preventDefault();
@@ -350,6 +363,7 @@ footer img{height:30px}
       .then(function(d){
         if(!d.success)throw new Error(d.message);
         f.reset();
+        document.getElementById('est-entreprise').dispatchEvent(new Event('change'));
         st.className='statut ok';
         st.textContent='Merci ! Votre demande est bien envoyée. On vous répond rapidement par courriel.';
       })
