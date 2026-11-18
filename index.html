@@ -164,7 +164,8 @@ section.bloc{padding:96px 0}
 .statut a{color:inherit}
 .aide-champ.alerte{color:var(--orange);font-weight:600}
 .aide-champ a{color:inherit;font-weight:600}
-.formulaire .invalide,.formulaire .choix.invalide label{border-color:var(--orange)!important;box-shadow:0 0 0 3px rgba(158,90,0,.15)}
+.aide-champ[hidden]{display:none}
+.formulaire .attention,.formulaire .invalide,.formulaire .choix.invalide label{border-color:var(--orange)!important;box-shadow:0 0 0 3px rgba(158,90,0,.15)}
 .formulaire .choix.invalide{outline:none}
 @media (max-width:960px){.contact .wrap{grid-template-columns:1fr;gap:40px}}
 @media (max-width:560px){.choix,.champs{grid-template-columns:1fr}.formulaire{padding:24px 20px}}
@@ -342,7 +343,7 @@ footer img{height:30px}
           <option data-p="base">1 h</option><option data-p="base">2 h</option><option data-p="base">3 h</option><option data-p="base">4 h et plus</option><option data-p="base">1 journée</option><option data-p="j2">2 jours</option><option data-p="sem">3 à 7 jours</option><option data-p="plus">Plus de 7 jours</option>
         </select></label>
         <label><span>Lieu de l'événement</span><input type="text" name="Lieu" placeholder="Salle, ville" required></label>
-        <label><span>Taille de l'audience</span><input type="number" name="Taille de l'audience" min="1" inputmode="numeric" placeholder="Nombre de personnes" required></label>
+        <label><span>Taille de l'audience</span><input type="number" name="Taille de l'audience" min="1" inputmode="numeric" placeholder="Nombre de personnes" id="audience" required><small class="aide-champ" id="aide-audience" hidden>Audience de plus de 150 personnes : le prix est établi sur soumission, selon vos besoins.</small></label>
         <label class="large"><span>Vos besoins</span><textarea name="Besoins" placeholder="Type d'événement, horaire, nombre de micros, musiciens, questions…"></textarea></label>
       </div>
 
@@ -387,7 +388,11 @@ footer img{height:30px}
   var du=document.getElementById('duree'),est=document.getElementById('estimation'),pa=document.getElementById('prix-affiche');
   function m(n){return n.toLocaleString('fr-CA')+' $'}
   function opt(){return du.options[du.selectedIndex]||{dataset:{}}}
-  function prix(cle){var p=PRIX[cle],c=opt().dataset.p||'base';return p&&p[c]?{v:p[c][0],u:p[c][1],dep:false}:null}
+  var au=document.getElementById('audience'),aideAu=document.getElementById('aide-audience');
+  function grosse(){return +au.value>150}
+  function majAudience(){var g=grosse();aideAu.hidden=!g;aideAu.classList.toggle('alerte',g);au.classList.toggle('attention',g)}
+  au.addEventListener('input',function(){majAudience();majPrix()});
+  function prix(cle){var p=PRIX[cle],c=opt().dataset.p||'base';if(grosse())return null;return p&&p[c]?{v:p[c][0],u:p[c][1],dep:false}:null}
   function majPrix(){
     f.querySelectorAll('input[name=Forfait]').forEach(function(r){
       var x=prix(r.dataset.cle),el=r.parentNode.querySelector('.px');
@@ -401,8 +406,9 @@ footer img{height:30px}
       est.innerHTML='Prix estimé : '+(x.dep?'à partir de ':'')+'<b class="m">'+m(x.v)+'</b> '+(x.u.charAt(0)==='/'?x.u:'('+x.u+')')+'<small>'+nom+' · tout inclus, aucune taxe · prix 2026-2027. Le prix final est confirmé dans votre soumission.</small>';
       pa.value=(x.dep?'À partir de ':'')+m(x.v)+' ('+(x.u.charAt(0)==='/'?'1 événement':x.u)+') · '+nom+' · prix 2026-2027';
     }else{
-      est.innerHTML='Prix estimé : <b class="m">sur soumission</b><small>'+nom+' · on vous prépare un prix selon vos besoins.</small>';
-      pa.value='Sur soumission · '+nom;
+      var raison=grosse()?'audience de plus de 150 personnes':'';
+      est.innerHTML='Prix estimé : <b class="m">sur soumission</b><small>'+nom+(raison?' · '+raison:'')+' · on vous prépare un prix selon vos besoins.</small>';
+      pa.value='Sur soumission · '+nom+(raison?' ('+raison+')':'');
     }
   }
   f.addEventListener('change',majPrix);
@@ -443,7 +449,7 @@ footer img{height:30px}
         if(!d.success)throw new Error(d.message);
         f.reset();
         document.getElementById('est-entreprise').dispatchEvent(new Event('change'));
-        majPrix();
+        majAudience();majPrix();
         st.className='statut ok';
         st.textContent='Merci ! Votre demande est bien envoyée. On vérifie la disponibilité de la date et on vous répond rapidement par courriel.';
       })
