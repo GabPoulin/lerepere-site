@@ -52,7 +52,7 @@ mauvais prix.
 - Dans Web3Forms, laisser **Captcha Protection** désactivé : le site n'affiche pas de captcha, et
   les envois seraient refusés. Garder **Advanced Spam Filter** activé (le site a aussi un champ
   piège anti-robots).
-- Règles du formulaire : date au moins 5 jours à l'avance (samedi suivant par défaut, 19 h),
+- Règles du formulaire : date au moins 7 jours à l'avance (samedi suivant par défaut, 19 h),
   durées selon le forfait, prix « sur soumission » au-delà de 150 personnes, option entreprise et
   événement extérieur. Le prix affiché au client est inclus dans le courriel.
 
@@ -76,10 +76,11 @@ Chaque pull request et chaque mise à jour de `main` lancent les tests dans GitH
 dans Chrome (ordinateur et iPhone) et dans Safari/WebKit (iPhone) :
 
 - la page se charge sans erreur, sans défilement horizontal, sans numéro de téléphone en clair ;
+- texto et appel sont offerts sur téléphone seulement ; sur ordinateur, seulement le courriel ;
 - la politique de sécurité (CSP) ne bloque rien et les liens « nouvel onglet » sont protégés ;
 - le bouton PDF pointe vers un fichier présent dans le dépôt ;
 - les valeurs par défaut du formulaire (samedi, 19 h, 1 journée, 150 personnes et moins) ;
-- le délai minimum de 5 jours et les liens texto, appel et courriel ;
+- le délai minimum de 7 jours et les liens texto, appel et courriel ;
 - les durées offertes et les prix estimés pour chaque forfait ;
 - l'audience de plus de 150 personnes, l'option entreprise et l'événement extérieur ;
 - l'envoi : tous les champs attendus sont transmis (l'envoi réel vers Web3Forms est simulé, aucun

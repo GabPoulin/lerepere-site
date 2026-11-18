@@ -76,6 +76,23 @@ test.describe('Page', () => {
     await expect(page.locator('a[href^="tel:"]').first()).toBeAttached();
   });
 
+  test('texto et appel sur téléphone seulement, courriel seulement sur ordinateur', async ({ page, isMobile }) => {
+    await ouvrir(page);
+    const rapide = page.locator('.rapide');
+    if (isMobile) {
+      await expect(rapide.locator('a[href^="sms:"]')).toBeVisible();
+      await expect(rapide.locator('a[href^="tel:"]')).toBeVisible();
+      await expect(page.locator('#aide-date a[href^="sms:"]')).toBeVisible();
+    } else {
+      await expect(rapide.locator('a[href^="sms:"]')).toBeHidden();
+      await expect(rapide.locator('a[href^="tel:"]')).toBeHidden();
+      await expect(rapide.locator('a[href^="mailto:"]')).toBeVisible();
+      expect(await rapide.innerText()).toBe('Pour une question rapide, écrivez-nous');
+      expect(await page.locator('#aide-date').innerText()).toContain('Contactez-nous par courriel.');
+      await expect(page.locator('#aide-date a[href^="tel:"]')).toBeHidden();
+    }
+  });
+
   test('le bouton PDF pointe vers un fichier présent dans le dépôt', async ({ page }) => {
     await ouvrir(page);
     const href = await page.locator('a', { hasText: 'Télécharger la fiche des forfaits' }).getAttribute('href');
@@ -86,11 +103,11 @@ test.describe('Page', () => {
 });
 
 test.describe('Formulaire : valeurs par défaut', () => {
-  test('samedi à au moins 5 jours, 19 h, 1 journée, 150 personnes et moins', async ({ page }) => {
+  test('samedi à au moins 7 jours, 19 h, 1 journée, 150 personnes et moins', async ({ page }) => {
     await ouvrir(page);
     const date = await page.inputValue('#date-evenement');
-    expect(date >= dansJours(5)).toBe(true);
-    expect(date < dansJours(12)).toBe(true);
+    expect(date >= dansJours(7)).toBe(true);
+    expect(date < dansJours(14)).toBe(true);
     expect(new Date(date + 'T12:00').getDay()).toBe(6);
     await expect(page.locator('[name="Heure de début"]')).toHaveValue('19:00');
     await expect(page.locator('#duree')).toHaveValue('1 journée');
@@ -107,24 +124,24 @@ test.describe('Formulaire : validation', () => {
     expect(envois.length).toBe(0);
   });
 
-  test('une date à moins de 5 jours est bloquée et propose texto, appel ou courriel', async ({ page }) => {
+  test('une date à moins de 7 jours est bloquée et propose texto, appel ou courriel', async ({ page }) => {
     const { envois } = await ouvrir(page);
     await remplirMinimum(page);
-    await page.fill('#date-evenement', dansJours(4));
+    await page.fill('#date-evenement', dansJours(6));
     await page.dispatchEvent('#date-evenement', 'change');
     await expect(page.locator('#aide-date')).toHaveClass(/alerte/);
     await envoyer(page);
-    await expect(page.locator('#statut')).toContainText('au moins 5 jours');
+    await expect(page.locator('#statut')).toContainText('au moins 7 jours');
     await expect(page.locator('#statut a[href^="sms:"]')).toBeAttached();
     await expect(page.locator('#statut a[href^="tel:"]')).toBeAttached();
     await expect(page.locator('#statut a[href*="Demande%20sp%C3%A9ciale"]')).toBeAttached();
     expect(envois.length).toBe(0);
   });
 
-  test('une date à 5 jours est acceptée', async ({ page }) => {
+  test('une date à 7 jours est acceptée', async ({ page }) => {
     const { envois } = await ouvrir(page);
     await remplirMinimum(page);
-    await page.fill('#date-evenement', dansJours(5));
+    await page.fill('#date-evenement', dansJours(7));
     await envoyer(page);
     await expect(page.locator('#statut')).toContainText('Merci');
     expect(envois.length).toBe(1);

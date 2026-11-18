@@ -169,11 +169,15 @@ section.bloc{padding:96px 0}
 .formulaire button{justify-self:center;cursor:pointer;font-size:15px}
 .formulaire button:disabled{opacity:.6;cursor:wait}
 .formulaire .piege{position:absolute;left:-9999px}
+.contact .formulaire .statut{max-width:none;opacity:1}
 .statut{text-align:center;font-size:15px;border-radius:10px;padding:14px 16px;display:none}
 .statut.ok{display:block;background:#EAF1E3;color:var(--vert)}
 .statut.erreur{display:block;background:#FBF4EA;color:var(--orange)}
 .statut a{color:inherit}
-.contact .formulaire .confid{font-size:8px;color:var(--gris);text-align:center;line-height:1.45;max-width:none;opacity:1}
+/* Texto et appel sur téléphone seulement ; sur ordinateur (souris), courriel seulement */
+.ordi-seul{display:none}
+@media (hover:hover) and (pointer:fine){.mobile-seul{display:none}.ordi-seul{display:inline}}
+.contact .formulaire .confid{font-size:9px;color:var(--gris);text-align:center;line-height:1.45;max-width:none;opacity:1}
 .aide-champ.alerte{color:var(--orange);font-weight:600}
 .aide-champ a{color:inherit;font-weight:600}
 .aide-champ[hidden]{display:none}
@@ -327,7 +331,7 @@ footer img{height:30px}
       <div class="eyebrow">Réserver une date</div>
       <h2>Parlons de votre événement.</h2>
       <p>Québec, Lévis et environs, et ailleurs au Québec sur demande. Remplissez le formulaire : on vous répond rapidement avec une soumission claire par courriel.</p>
-      <p class="rapide">Pour une question rapide, contactez Gabriel par <a href="sms:+14504211285">message texte</a>, ou <a href="tel:+14504211285">appelez-nous</a></p>
+      <p class="rapide">Pour une question rapide, <span class="mobile-seul">contactez Gabriel par <a href="sms:+14504211285">message texte</a>, ou <a href="tel:+14504211285">appelez-nous</a></span><span class="ordi-seul"><a href="mailto:contact@lerepere.info">écrivez-nous</a></span></p>
     </div>
     <form class="formulaire" id="formulaire" action="https://api.web3forms.com/submit" method="POST" novalidate>
       <input type="hidden" name="access_key" value="5164a566-56f0-4053-a9b0-da836d557cff">
@@ -356,7 +360,7 @@ footer img{height:30px}
         <div class="champs">
           <label><span>Date</span><input type="date" name="Date de l'événement" id="date-evenement" required></label>
           <label><span>Heure de début</span><input type="time" name="Heure de début" value="19:00" required></label>
-          <small class="aide-champ large" id="aide-date">Au moins 5 jours à l'avance. La date n'est pas garantie : on vous confirme sa disponibilité par courriel. Plus urgent ? Contactez-nous par <a href="sms:+14504211285">texto</a>, <a href="tel:+14504211285">appel</a> ou <a href="mailto:contact@lerepere.info?subject=Demande%20sp%C3%A9ciale">courriel</a>.</small>
+          <small class="aide-champ large" id="aide-date">Au moins 7 jours à l'avance. La date n'est pas garantie : on vous confirme sa disponibilité par courriel. Plus urgent ? Contactez-nous par <span class="mobile-seul"><a href="sms:+14504211285">texto</a>, <a href="tel:+14504211285">appel</a> ou </span><a href="mailto:contact@lerepere.info?subject=Demande%20sp%C3%A9ciale">courriel</a>.</small>
           <label><span>Durée approximative</span><select name="Durée approximative" id="duree" required>
             <option value="" disabled>Choisir…</option>
             <option data-p="base" data-j="1" selected>1 journée</option><option data-p="j2" data-j="2">2 jours</option><option data-p="sem" data-j="3">3 à 7 jours</option><option data-p="plus" data-j="8">Plus de 7 jours</option>
