@@ -118,24 +118,39 @@ section.bloc{padding:96px 0}
 
 /* Contact */
 .contact{background:var(--vert);color:#fff;position:relative;overflow:hidden}
-.contact .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center;padding-top:96px;padding-bottom:96px}
+.contact .wrap{display:grid;grid-template-columns:.8fr 1.2fr;gap:56px;align-items:start;padding-top:96px;padding-bottom:96px}
 .contact h2{font-size:clamp(32px,4.5vw,48px);line-height:1.1;font-weight:800;margin:12px 0 16px}
 .contact p{opacity:.9;font-size:18px;max-width:40ch}
 .contact .eyebrow{color:var(--orange-clair)}
-.coord{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:30px;display:grid;gap:14px}
-.coord a.ligne{display:flex;justify-content:space-between;align-items:center;gap:12px;text-decoration:none;background:rgba(255,255,255,.07);border-radius:10px;padding:16px 18px;transition:.2s}
-.coord a.ligne:hover{background:rgba(255,255,255,.14)}
-.coord .k{font-family:"Montserrat",system-ui,sans-serif;font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--orange-clair)}
-.coord .v{font-size:17px;font-weight:600}
-.coord .fl{opacity:.6}
-.coord a.principal{background:var(--orange);padding:22px 22px}
-.coord a.principal:hover{background:#87500a}
-.coord a.principal .k{color:#fff;opacity:.85}
-.coord a.principal .v{font-size:20px}
-.coord .aide{font-size:15px;opacity:.85}
-.coord .rapide{font-size:14px;opacity:.7;border-top:1px solid rgba(255,255,255,.15);padding-top:14px}
-.coord .rapide a{color:#fff}
-@media (max-width:860px){.contact .wrap{grid-template-columns:1fr}}
+.contact .rapide{margin-top:28px;font-size:15px;opacity:.75;border-top:1px solid rgba(255,255,255,.15);padding-top:18px}
+.contact .rapide a{color:#fff}
+.formulaire{background:#fff;color:var(--charbon);border-radius:16px;padding:32px;display:grid;gap:18px;box-shadow:0 18px 40px rgba(0,0,0,.25)}
+.formulaire fieldset{border:0;display:grid;gap:10px}
+.formulaire legend,.champs label>span{font-family:"Montserrat",system-ui,sans-serif;font-weight:700;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--vert)}
+.formulaire legend{margin-bottom:10px}
+.formulaire .opt{font-weight:500;letter-spacing:0;text-transform:none;color:var(--gris)}
+.choix{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.formulaire .choix label{display:flex;gap:10px;align-items:flex-start;border:1.5px solid var(--ligne);border-radius:10px;padding:12px 14px;cursor:pointer;transition:.15s;font-size:15px;line-height:1.3}
+.choix label:hover{border-color:var(--orange)}
+.choix label:has(input:checked){border-color:var(--orange);background:#FBF4EA}
+.choix input{accent-color:var(--orange);margin-top:3px;flex:none;width:17px;height:17px}
+.choix b{display:block;color:var(--vert);font-family:"Montserrat",system-ui,sans-serif;font-size:14.5px}
+.choix small{color:var(--gris);font-size:13px}
+.champs{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.champs .large{grid-column:1/-1}
+.champs label{display:grid;gap:6px}
+.formulaire input:not([type=radio]),.formulaire textarea{font:inherit;font-size:16px;color:var(--charbon);border:1.5px solid var(--ligne);border-radius:10px;padding:12px 14px;background:#fff;width:100%}
+.formulaire textarea{min-height:120px;resize:vertical}
+.formulaire input:not([type=radio]):focus,.formulaire textarea:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(158,90,0,.15)}
+.formulaire button{justify-self:start;cursor:pointer;font-size:15px}
+.formulaire button:disabled{opacity:.6;cursor:wait}
+.formulaire .piege{position:absolute;left:-9999px}
+.statut{font-size:15px;border-radius:10px;padding:14px 16px;display:none}
+.statut.ok{display:block;background:#EAF1E3;color:var(--vert)}
+.statut.erreur{display:block;background:#FBEDE6;color:#8a2c0d}
+.statut a{color:inherit}
+@media (max-width:960px){.contact .wrap{grid-template-columns:1fr;gap:40px}}
+@media (max-width:560px){.choix,.champs{grid-template-columns:1fr}.formulaire{padding:24px 20px}}
 
 footer{background:#18250e;color:rgba(255,255,255,.75);font-size:14px}
 footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;padding-top:28px;padding-bottom:28px}
@@ -165,7 +180,7 @@ footer img{height:30px}
       <p class="lead">Sonorisation et services audiovisuels pour vos événements : l'équipement est livré, installé et testé par notre équipe. Des prix affichés, tout inclus, sans surprise.</p>
       <div class="ctas">
         <a class="btn btn-orange" href="#forfaits">Voir les forfaits</a>
-        <a class="btn btn-contour" href="mailto:contact@lerepere.info?subject=Demande%20de%20soumission">Demander une soumission</a>
+        <a class="btn btn-contour" href="#contact">Demander une soumission</a>
       </div>
       <p class="prix">Forfaits à partir de <b>395 $ tout inclus</b> · Québec, Lévis et environs</p>
     </div>
@@ -280,13 +295,38 @@ footer img{height:30px}
     <div>
       <div class="eyebrow">Réserver une date</div>
       <h2>Parlons de votre événement.</h2>
-      <p>Québec, Lévis et environs, et ailleurs au Québec sur demande. On vous répond rapidement avec un prix clair.</p>
-    </div>
-    <div class="coord">
-      <a class="ligne principal" href="mailto:contact@lerepere.info?subject=Demande%20de%20soumission"><span><span class="k">Écrivez-nous</span><br><span class="v">contact@lerepere.info</span></span><span class="fl">→</span></a>
-      <p class="aide">Indiquez la date, le lieu, le type d'événement et le nombre de personnes : on vous répond avec une soumission claire par courriel.</p>
+      <p>Québec, Lévis et environs, et ailleurs au Québec sur demande. Remplissez le formulaire : on vous répond rapidement avec une soumission claire par courriel.</p>
       <p class="rapide">Pour une question rapide, contactez Gabriel par <a href="sms:+14504211285">message texte</a>, ou <a href="tel:+14504211285">appelez-nous</a></p>
     </div>
+    <form class="formulaire" id="formulaire" action="https://api.web3forms.com/submit" method="POST">
+      <input type="hidden" name="access_key" value="CLE_WEB3FORMS">
+      <input type="hidden" name="subject" value="Nouvelle demande de soumission (site web)">
+      <input type="hidden" name="from_name" value="Site Le Repère">
+      <input type="checkbox" name="botcheck" class="piege" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+      <fieldset>
+        <legend>Forfait souhaité</legend>
+        <div class="choix">
+          <label><input type="radio" name="forfait" value="DJ / party" required><span><b>DJ / party</b><small>395 $ · jusqu'à 150 pers.</small></span></label>
+          <label><input type="radio" name="forfait" value="Conférence / corporatif"><span><b>Conférence / corporatif</b><small>665 $ · jusqu'à 150 pers.</small></span></label>
+          <label><input type="radio" name="forfait" value="Spectacle trio musical"><span><b>Spectacle trio musical</b><small>1 150 $ · jusqu'à 150 pers.</small></span></label>
+          <label><input type="radio" name="forfait" value="Forfait personnalisé"><span><b>Forfait personnalisé</b><small>Plus de 150 pers., band, autre besoin</small></span></label>
+        </div>
+      </fieldset>
+
+      <div class="champs">
+        <label><span>Nom</span><input type="text" name="nom" autocomplete="name" required></label>
+        <label><span>Courriel</span><input type="email" name="email" autocomplete="email" required></label>
+        <label><span>Téléphone <em class="opt">(facultatif)</em></span><input type="tel" name="telephone" autocomplete="tel"></label>
+        <label><span>Date de l'événement</span><input type="date" name="date" required></label>
+        <label><span>Lieu de l'événement</span><input type="text" name="lieu" placeholder="Salle, ville" required></label>
+        <label><span>Nombre de personnes</span><input type="number" name="personnes" min="1" inputmode="numeric" required></label>
+        <label class="large"><span>Vos besoins</span><textarea name="message" placeholder="Type d'événement, horaire, nombre de micros, musiciens, questions…"></textarea></label>
+      </div>
+
+      <button type="submit" class="btn btn-orange">Envoyer ma demande</button>
+      <p class="statut" id="statut" role="status" aria-live="polite"></p>
+    </form>
   </div>
 </section>
 </main>
@@ -299,5 +339,27 @@ footer img{height:30px}
   </div>
 </footer>
 
+<script>
+(function(){
+  var f=document.getElementById('formulaire'),st=document.getElementById('statut'),btn=f.querySelector('button');
+  f.addEventListener('submit',function(e){
+    e.preventDefault();
+    btn.disabled=true;btn.textContent='Envoi en cours…';st.className='statut';
+    fetch(f.action,{method:'POST',headers:{'Accept':'application/json'},body:new FormData(f)})
+      .then(function(r){return r.json()})
+      .then(function(d){
+        if(!d.success)throw new Error(d.message);
+        f.reset();
+        st.className='statut ok';
+        st.textContent='Merci ! Votre demande est bien envoyée. On vous répond rapidement par courriel.';
+      })
+      .catch(function(){
+        st.className='statut erreur';
+        st.innerHTML='Oups, l’envoi n’a pas fonctionné. Écrivez-nous directement à <a href="mailto:contact@lerepere.info?subject=Demande%20de%20soumission">contact@lerepere.info</a>.';
+      })
+      .finally(function(){btn.disabled=false;btn.textContent='Envoyer ma demande'});
+  });
+})();
+</script>
 </body>
 </html>
