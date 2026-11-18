@@ -165,6 +165,7 @@ section.bloc{padding:96px 0}
 .aide-champ.alerte{color:var(--orange);font-weight:600}
 .aide-champ a{color:inherit;font-weight:600}
 .aide-champ[hidden]{display:none}
+.champs .large.aide-champ{margin-top:-8px}
 .formulaire .attention,.formulaire .invalide,.formulaire .choix.invalide label{border-color:var(--orange)!important;box-shadow:0 0 0 3px rgba(158,90,0,.15)}
 .formulaire .choix.invalide{outline:none}
 @media (max-width:960px){.contact .wrap{grid-template-columns:1fr;gap:40px}}
@@ -348,6 +349,8 @@ footer img{height:30px}
           <option>50 personnes et moins</option><option>150 personnes et moins</option><option data-grosse="1">Plus de 150 personnes</option>
         </select><small class="aide-champ" id="aide-audience" hidden>Audience de plus de 150 personnes : le prix est établi sur soumission, selon vos besoins.</small></label>
         <label id="champ-estimation" hidden><span>Audience estimée</span><input type="number" name="Audience estimée" id="audience-estimee" min="151" inputmode="numeric" placeholder="Nombre de personnes" disabled></label>
+        <label class="large case"><input type="checkbox" id="exterieur"> L'événement a lieu à l'extérieur</label>
+        <small class="aide-champ large alerte" id="aide-exterieur" hidden>Un abri pour l'équipement (tente, chapiteau ou espace couvert), fourni par vous, est obligatoire.</small>
         <label class="large"><span>Vos besoins</span><textarea name="Besoins" placeholder="Type d'événement, horaire, nombre de micros, musiciens, questions…"></textarea></label>
       </div>
 
@@ -398,6 +401,9 @@ footer img{height:30px}
   function majAudience(){var g=grosse();aideAu.hidden=!g;aideAu.classList.toggle('alerte',g);au.classList.toggle('attention',g);
     chEst.hidden=!g;auEst.disabled=!g;auEst.required=g;if(!g){auEst.value='';marquer(auEst,false)}}
   au.addEventListener('change',majAudience);
+  var ext=document.getElementById('exterieur'),aideExt=document.getElementById('aide-exterieur');
+  function majExt(){aideExt.hidden=!ext.checked}
+  ext.addEventListener('change',majExt);
   function prix(cle){var p=PRIX[cle],c=opt().dataset.p||'base';if(grosse())return null;return p&&p[c]?{v:p[c][0],u:p[c][1],dep:false}:null}
   function majPrix(){
     f.querySelectorAll('input[name=Forfait]').forEach(function(r){
@@ -449,13 +455,13 @@ footer img{height:30px}
       return;
     }
     btn.disabled=true;btn.textContent='Envoi en cours…';st.className='statut';
-    fetch(f.action,{method:'POST',headers:{'Accept':'application/json'},body:new FormData(f)})
+    fetch(f.action,{method:'POST',headers:{'Accept':'application/json'},body:(function(){var fd=new FormData(f);fd.set('Événement extérieur',ext.checked?'Oui':'Non');return fd})()})
       .then(function(r){return r.json()})
       .then(function(d){
         if(!d.success)throw new Error(d.message);
         f.reset();
         document.getElementById('est-entreprise').dispatchEvent(new Event('change'));
-        majAudience();majPrix();
+        majAudience();majExt();majPrix();
         st.className='statut ok';
         st.textContent='Merci ! Votre demande est bien envoyée. On vérifie la disponibilité de la date et on vous répond rapidement par courriel.';
       })
