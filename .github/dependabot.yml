@@ -1,0 +1,11 @@
+# Mises à jour de sécurité automatiques (proposées en PR)
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: monthly

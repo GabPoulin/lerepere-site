@@ -3,7 +3,7 @@ const { test, expect } = require('@playwright/test');
 const path = require('path');
 const fs = require('fs');
 
-const PAGE = 'file://' + path.resolve(__dirname, '..', 'index.html');
+const PAGE = '/index.html';
 
 // Date locale au format AAAA-MM-JJ, décalée de n jours
 function dansJours(n) {
@@ -17,6 +17,7 @@ async function ouvrir(page) {
   const erreurs = [];
   const envois = [];
   page.on('pageerror', (e) => erreurs.push(e.message));
+  page.on('console', (m) => { if (m.type() === 'error' && /Content Security Policy|Refused to/i.test(m.text())) erreurs.push(m.text()); });
   await page.route('https://api.web3forms.com/**', (route) => {
     envois.push(route.request().postData() || '');
     route.fulfill({ status: 200, contentType: 'application/json', body: '{"success":true}' });
@@ -43,6 +44,22 @@ async function envoyer(page) {
 }
 
 test.describe('Page', () => {
+  test('respecte la politique de sécurité (CSP) sans blocage', async ({ page }) => {
+    const { erreurs } = await ouvrir(page);
+    await expect(page.locator('meta[http-equiv="Content-Security-Policy"]')).toHaveCount(1);
+    await expect(page.locator('script:not([src])')).toHaveCount(0);
+    // Le script du formulaire doit s'être exécuté (prix estimé calculé)
+    await page.check('input[data-cle=dj]');
+    await expect(page.locator('#estimation')).toBeVisible();
+    expect(erreurs).toEqual([]);
+  });
+
+  test('les liens qui ouvrent un nouvel onglet sont protégés (noopener)', async ({ page }) => {
+    await ouvrir(page);
+    const liens = await page.$$eval('a[target=_blank]', (a) => a.map((x) => x.rel));
+    for (const rel of liens) expect(rel).toContain('noopener');
+  });
+
   test('se charge sans erreur ni défilement horizontal', async ({ page }) => {
     const { erreurs } = await ouvrir(page);
     await expect(page.locator('h1')).toBeVisible();
