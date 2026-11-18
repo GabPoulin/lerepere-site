@@ -335,7 +335,7 @@ footer img{height:30px}
         <label><span>Heure de début</span><input type="time" name="Heure de début" required></label>
         <label><span>Durée approximative</span><select name="Durée approximative" id="duree" required>
           <option value="" disabled selected>Choisir…</option>
-          <option data-p="base">1 h</option><option data-p="base">2 h</option><option data-p="base">3 h</option><option data-p="base">4 h et plus</option><option data-p="base">1 journée</option><option data-p="j2">2 jours</option><option data-p="sem" data-n="1">3 à 7 jours (1 semaine)</option><option data-p="sem" data-n="2">8 à 14 jours (2 semaines)</option><option data-p="sem" data-n="3">15 à 21 jours (3 semaines)</option><option data-p="sem" data-n="4" data-plus="1">22 jours et plus (4 semaines et plus)</option>
+          <option data-p="base">1 h</option><option data-p="base">2 h</option><option data-p="base">3 h</option><option data-p="base">4 h et plus</option><option data-p="base">1 journée</option><option data-p="j2">2 jours</option><option data-p="sem">3 à 7 jours</option><option data-p="plus">Plus de 7 jours</option>
         </select></label>
         <label><span>Lieu de l'événement</span><input type="text" name="Lieu" placeholder="Salle, ville" required></label>
         <label><span>Taille de l'audience</span><input type="number" name="Taille de l'audience" min="1" inputmode="numeric" placeholder="Nombre de personnes" required></label>
@@ -373,18 +373,16 @@ footer img{height:30px}
 
   // Prix selon le forfait et la durée (prix 2026-2027) : modifier ici au besoin
   var PRIX={
-    // base = 1 jour · j2 = 2 jours · sem = par semaine (3 jours et plus, chaque semaine commencée est facturée)
-    dj:  {nom:'DJ / party',base:[395,'/ événement'],j2:[465,'fin de semaine, 2 jours'],sem:[600,'semaine']},
-    conf:{nom:'Conférence / corporatif',base:[665,'/ événement'],j2:[1130,'2 jours'],sem:[2375,'semaine']},
+    // base = 1 jour · j2 = 2 jours · sem = 3 à 7 jours. Durée absente = sur soumission (plus de 7 jours : toujours sur soumission)
+    dj:  {nom:'DJ / party',base:[395,'/ événement'],j2:[465,'fin de semaine, 2 jours'],sem:[600,'semaine, 3 à 7 jours']},
+    conf:{nom:'Conférence / corporatif',base:[665,'/ événement'],j2:[1130,'2 jours']},
     trio:{nom:'Spectacle trio musical',base:[1150,'/ événement']},
     perso:{nom:'Forfait personnalisé'}
   };
   var du=document.getElementById('duree'),est=document.getElementById('estimation'),pa=document.getElementById('prix-affiche');
   function m(n){return n.toLocaleString('fr-CA')+' $'}
   function opt(){return du.options[du.selectedIndex]||{dataset:{}}}
-  function prix(cle){var p=PRIX[cle],o=opt().dataset,c=o.p||'base',n=+(o.n||1);if(!p||!p[c])return null;
-    var u=c==='sem'?(n>1?n+' semaines × '+m(p.sem[0]):'1 semaine'):p[c][1];
-    return {v:p[c][0]*n,u:u,dep:!!o.plus}}
+  function prix(cle){var p=PRIX[cle],c=opt().dataset.p||'base';return p&&p[c]?{v:p[c][0],u:p[c][1],dep:false}:null}
   function majPrix(){
     f.querySelectorAll('input[name=Forfait]').forEach(function(r){
       var x=prix(r.dataset.cle),el=r.parentNode.querySelector('.px');
