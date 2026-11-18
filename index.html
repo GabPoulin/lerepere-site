@@ -356,7 +356,7 @@ footer img{height:30px}
           <small class="aide-champ large" id="aide-date">Au moins 5 jours à l'avance. La date n'est pas garantie : on vous confirme sa disponibilité par courriel. Plus urgent ? Contactez-nous par <a href="sms:+14504211285">texto</a>, <a href="tel:+14504211285">appel</a> ou <a href="mailto:contact@lerepere.info?subject=Demande%20sp%C3%A9ciale">courriel</a>.</small>
           <label><span>Durée approximative</span><select name="Durée approximative" id="duree" required>
             <option value="" disabled>Choisir…</option>
-            <option data-p="base">1 h</option><option data-p="base">2 h</option><option data-p="base">3 h</option><option data-p="base">4 h et plus</option><option data-p="base" selected>1 journée</option><option data-p="j2">2 jours</option><option data-p="sem">3 à 7 jours</option><option data-p="plus">Plus de 7 jours</option>
+            <option data-p="base" data-j="1" selected>1 journée</option><option data-p="j2" data-j="2">2 jours</option><option data-p="sem" data-j="3">3 à 7 jours</option><option data-p="plus" data-j="8">Plus de 7 jours</option>
           </select></label>
           <label><span>Taille de l'audience</span><select name="Taille de l'audience" id="audience" required>
             <option value="" disabled>Choisir…</option>
@@ -461,6 +461,21 @@ footer img{height:30px}
       pa.value='Sur soumission · '+nom+(raison?' ('+raison+')':'');
     }
   }
+  // Durées offertes selon le forfait (la dernière option est toujours sur soumission)
+  var DUREES={
+    // [libellé, catégorie de prix, nombre de jours minimum]
+    tous:[['1 journée','base',1],['2 jours','j2',2],['3 à 7 jours','sem',3],['Plus de 7 jours','plus',8]],
+    conf:[['1 journée','base',1],['2 jours','j2',2],['3 jours et plus','plus',3]],
+    trio:[['1 journée','base',1],['2 jours et plus','plus',2]]
+  };
+  function majDurees(){
+    var r=f.querySelector('input[name=Forfait]:checked'),liste=DUREES[r&&r.dataset.cle]||DUREES.tous;
+    var j=+(opt().dataset.j||1),choix=liste[0];
+    liste.forEach(function(x){if(x[2]<=j)choix=x});
+    while(du.options.length>1)du.remove(1);
+    liste.forEach(function(x){var o=new Option(x[0],x[0]);o.dataset.p=x[1];o.dataset.j=x[2];if(x===choix)o.selected=true;du.add(o)});
+  }
+  f.addEventListener('change',function(e){if(e.target.name==='Forfait')majDurees()});
   f.addEventListener('change',majPrix);
   majPrix();
 
@@ -500,7 +515,7 @@ footer img{height:30px}
         if(!d.success)throw new Error(d.message);
         f.reset();
         document.getElementById('est-entreprise').dispatchEvent(new Event('change'));
-        majAudience();majExt();majPrix();
+        majDurees();du.value='1 journée';majAudience();majExt();majPrix();
         st.className='statut ok';
         st.textContent='Merci ! Votre demande est bien envoyée. On vérifie la disponibilité de la date et on vous répond rapidement par courriel.';
       })
