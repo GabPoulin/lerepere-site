@@ -136,7 +136,7 @@ section.bloc{padding:96px 0}
 .choix input{accent-color:var(--orange);margin-top:3px;flex:none;width:17px;height:17px}
 .choix b{display:block;color:var(--vert);font-family:"Montserrat",system-ui,sans-serif;font-size:14.5px}
 .choix small{color:var(--gris);font-size:13px}
-.champs{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+.champs{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start;gap:16px}
 .champs .large{grid-column:1/-1}
 .champs label{display:grid;gap:6px}
 .formulaire input:not([type=radio]):not([type=checkbox]),.formulaire textarea{font:inherit;font-size:16px;color:var(--charbon);border:1.5px solid var(--ligne);border-radius:10px;padding:12px 14px;background:#fff;width:100%}
@@ -146,8 +146,8 @@ section.bloc{padding:96px 0}
 .case input{accent-color:var(--orange);width:18px;height:18px;flex:none}
 .champs label[hidden]{display:none}
 .aide-champ{font-size:13.5px;color:var(--gris);line-height:1.4}
-.formulaire input[type=date]{-webkit-appearance:none;appearance:none;display:block;min-width:0;max-width:100%;min-height:50px;text-align:left}
-.formulaire input[type=date]::-webkit-date-and-time-value{text-align:left}
+.formulaire input[type=date],.formulaire input[type=time]{-webkit-appearance:none;appearance:none;display:block;min-width:0;max-width:100%;min-height:50px;text-align:left}
+.formulaire input[type=date]::-webkit-date-and-time-value,.formulaire input[type=time]::-webkit-date-and-time-value{text-align:left}
 .formulaire input:not([type=radio]):not([type=checkbox]):focus,.formulaire textarea:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(158,90,0,.15)}
 .formulaire button{justify-self:center;cursor:pointer;font-size:15px}
 .formulaire button:disabled{opacity:.6;cursor:wait}
@@ -325,7 +325,9 @@ footer img{height:30px}
         <label><span id="libelle-nom">Prénom et nom</span><input type="text" name="Prénom et nom" autocomplete="name" required></label>
         <label><span>Courriel</span><input type="email" name="email" autocomplete="email" required></label>
         <label><span>Téléphone <em class="opt">(facultatif)</em></span><input type="tel" name="Téléphone" autocomplete="tel"></label>
-        <label><span>Date de l'événement</span><input type="date" name="Date de l'événement" id="date-evenement" required><small class="aide-champ">Au moins 3 jours à l'avance. La date n'est pas garantie : on vous confirme sa disponibilité par courriel. Plus urgent ? Texto ou appel.</small></label>
+        <label><span>Date de l'événement</span><input type="date" name="Date de l'événement" id="date-evenement" required><small class="aide-champ">Au moins 5 jours à l'avance. La date n'est pas garantie : on vous confirme sa disponibilité par courriel. Plus urgent ? Texto ou appel.</small></label>
+        <label><span>Heure de début</span><input type="time" name="Heure de début" required></label>
+        <label><span>Heure de fin <em class="opt">(approx.)</em></span><input type="time" name="Heure de fin"></label>
         <label><span>Lieu de l'événement</span><input type="text" name="Lieu" placeholder="Salle, ville" required></label>
         <label><span>Nombre d'invités <em class="opt">(public)</em></span><input type="number" name="Nombre d'invités" min="1" inputmode="numeric" required></label>
         <label class="large"><span>Vos besoins</span><textarea name="Besoins" placeholder="Type d'événement, horaire, nombre de micros, musiciens, questions…"></textarea></label>
@@ -352,10 +354,10 @@ footer img{height:30px}
   var cb=document.getElementById('est-entreprise'),ch=document.getElementById('champ-entreprise'),ent=ch.querySelector('input'),lib=document.getElementById('libelle-nom');
   function maj(){var on=cb.checked;ch.hidden=!on;ent.disabled=!on;ent.required=on;lib.textContent=on?'Prénom et nom du contact':'Prénom et nom';if(!on)ent.value='';}
   cb.addEventListener('change',maj);
-  var de=document.getElementById('date-evenement'),d=new Date();d.setDate(d.getDate()+3);
+  var de=document.getElementById('date-evenement'),d=new Date();d.setDate(d.getDate()+5);
   var min=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
   de.min=min;
-  function verif(){de.setCustomValidity(de.value&&de.value<min?'Choisissez une date au moins 3 jours à l\u2019avance. Pour un besoin urgent, contactez-nous par texto ou appel.':'')}
+  function verif(){de.setCustomValidity(de.value&&de.value<min?'Choisissez une date au moins 5 jours à l\u2019avance. Pour un besoin urgent, contactez-nous par texto ou appel.':'')}
   de.addEventListener('input',verif);de.addEventListener('change',verif);
 })();
 (function(){
