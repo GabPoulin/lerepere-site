@@ -345,8 +345,9 @@ footer img{height:30px}
         <label><span>Lieu de l'événement</span><input type="text" name="Lieu" placeholder="Salle, ville" required></label>
         <label><span>Taille de l'audience</span><select name="Taille de l'audience" id="audience" required>
           <option value="" disabled selected>Choisir…</option>
-          <option>50 personnes et moins</option><option>51 à 150 personnes</option><option data-grosse="1">Plus de 150 personnes</option>
+          <option>50 personnes et moins</option><option>150 personnes et moins</option><option data-grosse="1">Plus de 150 personnes</option>
         </select><small class="aide-champ" id="aide-audience" hidden>Audience de plus de 150 personnes : le prix est établi sur soumission, selon vos besoins.</small></label>
+        <label id="champ-estimation" hidden><span>Audience estimée</span><input type="number" name="Audience estimée" id="audience-estimee" min="151" inputmode="numeric" placeholder="Nombre de personnes" disabled></label>
         <label class="large"><span>Vos besoins</span><textarea name="Besoins" placeholder="Type d'événement, horaire, nombre de micros, musiciens, questions…"></textarea></label>
       </div>
 
@@ -393,7 +394,9 @@ footer img{height:30px}
   function opt(){return du.options[du.selectedIndex]||{dataset:{}}}
   var au=document.getElementById('audience'),aideAu=document.getElementById('aide-audience');
   function grosse(){var o=au.options[au.selectedIndex];return !!(o&&o.dataset.grosse)}
-  function majAudience(){var g=grosse();aideAu.hidden=!g;aideAu.classList.toggle('alerte',g);au.classList.toggle('attention',g)}
+  var chEst=document.getElementById('champ-estimation'),auEst=document.getElementById('audience-estimee');
+  function majAudience(){var g=grosse();aideAu.hidden=!g;aideAu.classList.toggle('alerte',g);au.classList.toggle('attention',g);
+    chEst.hidden=!g;auEst.disabled=!g;auEst.required=g;if(!g){auEst.value='';marquer(auEst,false)}}
   au.addEventListener('change',majAudience);
   function prix(cle){var p=PRIX[cle],c=opt().dataset.p||'base';if(grosse())return null;return p&&p[c]?{v:p[c][0],u:p[c][1],dep:false}:null}
   function majPrix(){
