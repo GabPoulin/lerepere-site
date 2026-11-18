@@ -160,8 +160,12 @@ section.bloc{padding:96px 0}
 .formulaire .piege{position:absolute;left:-9999px}
 .statut{text-align:center;font-size:15px;border-radius:10px;padding:14px 16px;display:none}
 .statut.ok{display:block;background:#EAF1E3;color:var(--vert)}
-.statut.erreur{display:block;background:#FBEDE6;color:#8a2c0d}
+.statut.erreur{display:block;background:#FBF4EA;color:var(--orange)}
 .statut a{color:inherit}
+.aide-champ.alerte{color:var(--orange);font-weight:600}
+.aide-champ a{color:inherit;font-weight:600}
+.formulaire .invalide,.formulaire .choix.invalide label{border-color:var(--orange)!important;box-shadow:0 0 0 3px rgba(158,90,0,.15)}
+.formulaire .choix.invalide{outline:none}
 @media (max-width:960px){.contact .wrap{grid-template-columns:1fr;gap:40px}}
 @media (max-width:560px){.choix,.champs{grid-template-columns:1fr}.formulaire{padding:24px 20px}}
 
@@ -311,7 +315,7 @@ footer img{height:30px}
       <p>Québec, Lévis et environs, et ailleurs au Québec sur demande. Remplissez le formulaire : on vous répond rapidement avec une soumission claire par courriel.</p>
       <p class="rapide">Pour une question rapide, contactez Gabriel par <a href="sms:+14504211285">message texte</a>, ou <a href="tel:+14504211285">appelez-nous</a></p>
     </div>
-    <form class="formulaire" id="formulaire" action="https://api.web3forms.com/submit" method="POST">
+    <form class="formulaire" id="formulaire" action="https://api.web3forms.com/submit" method="POST" novalidate>
       <input type="hidden" name="access_key" value="5164a566-56f0-4053-a9b0-da836d557cff">
       <input type="checkbox" name="botcheck" class="piege" tabindex="-1" autocomplete="off" aria-hidden="true">
 
@@ -331,7 +335,7 @@ footer img{height:30px}
         <label><span id="libelle-nom">Prénom et nom</span><input type="text" name="Prénom et nom" autocomplete="name" required></label>
         <label><span>Courriel</span><input type="email" name="email" autocomplete="email" required></label>
         <label><span>Téléphone <em class="opt">(facultatif)</em></span><input type="tel" name="Téléphone" autocomplete="tel"></label>
-        <label><span>Date de l'événement</span><input type="date" name="Date de l'événement" id="date-evenement" required><small class="aide-champ">Au moins 5 jours à l'avance. La date n'est pas garantie : on vous confirme sa disponibilité par courriel. Plus urgent ? Texto ou appel.</small></label>
+        <label><span>Date de l'événement</span><input type="date" name="Date de l'événement" id="date-evenement" required><small class="aide-champ">Au moins 5 jours à l'avance. La date n'est pas garantie : on vous confirme sa disponibilité par courriel. Plus urgent ? Contactez-nous par <a href="sms:+14504211285">texto</a>, <a href="tel:+14504211285">appel</a> ou <a href="mailto:contact@lerepere.info?subject=Demande%20sp%C3%A9ciale">courriel</a>.</small></label>
         <label><span>Heure de début</span><input type="time" name="Heure de début" required></label>
         <label><span>Durée approximative</span><select name="Durée approximative" id="duree" required>
           <option value="" disabled selected>Choisir…</option>
@@ -368,7 +372,8 @@ footer img{height:30px}
   var de=document.getElementById('date-evenement'),d=new Date();d.setDate(d.getDate()+5);
   var min=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
   de.min=min;
-  function verif(){de.setCustomValidity(de.value&&de.value<min?'Choisissez une date au moins 5 jours à l\u2019avance. Pour un besoin urgent, contactez-nous par texto ou appel.':'')}
+  var aide=de.parentNode.querySelector('.aide-champ');
+  function verif(){var bad=!!(de.value&&de.value<min);de.setCustomValidity(bad?'Choisissez une date au moins 5 jours à l\u2019avance. Pour un besoin urgent, contactez-nous par texto ou appel.':'');de.classList.toggle('invalide',bad);aide.classList.toggle('alerte',bad)}
   de.addEventListener('input',verif);de.addEventListener('change',verif);
 
   // Prix selon le forfait et la durée (prix 2026-2027) : modifier ici au besoin
@@ -402,8 +407,35 @@ footer img{height:30px}
   }
   f.addEventListener('change',majPrix);
 
+  function nomChamp(el){
+    if(el.type==='radio')return 'forfait souhaité';
+    var l=el.closest('label'),sp=l&&l.querySelector('span');
+    return sp?sp.childNodes[0].textContent.trim().toLowerCase():el.name;
+  }
+  function marquer(el,on){var c=el.type==='radio'?el.closest('.choix'):el;if(c)c.classList.toggle('invalide',on)}
+  f.addEventListener('input',function(e){if(e.target.checkValidity&&e.target.checkValidity())marquer(e.target,false)});
+  f.addEventListener('change',function(e){if(e.target.checkValidity&&e.target.checkValidity())marquer(e.target,false)});
+
   f.addEventListener('submit',function(e){
     e.preventDefault();
+    verif();
+    var manquants=[],premier=null,vus={};
+    Array.prototype.forEach.call(f.elements,function(el){
+      if(!el.willValidate||el.checkValidity()){if(el.willValidate)marquer(el,false);return}
+      marquer(el,true);
+      if(!premier)premier=el;
+      var n=el===de&&de.value?'date (au moins 5 jours à l\u2019avance)':nomChamp(el);
+      if(!vus[n]){vus[n]=1;manquants.push(n)}
+    });
+    if(premier){
+      st.className='statut erreur';
+      st.textContent='Il manque des informations ou une information est invalide : '+manquants.join(', ')+'.';
+      if(!de.checkValidity()&&de.value)st.innerHTML+='<br>Pour une date plus rapprochée, contactez-nous par <a href="sms:+14504211285">texto</a>, <a href="tel:+14504211285">appel</a> ou <a href="mailto:contact@lerepere.info?subject=Demande%20sp%C3%A9ciale">courriel</a>.';
+      var cible=premier.type==='radio'?premier.closest('fieldset'):premier.closest('label')||premier;
+      cible.scrollIntoView({behavior:'smooth',block:'center'});
+      try{premier.focus({preventScroll:true})}catch(_){}
+      return;
+    }
     btn.disabled=true;btn.textContent='Envoi en cours…';st.className='statut';
     fetch(f.action,{method:'POST',headers:{'Accept':'application/json'},body:new FormData(f)})
       .then(function(r){return r.json()})
