@@ -4,15 +4,15 @@
   var cb=document.getElementById('est-entreprise'),ch=document.getElementById('champ-entreprise'),ent=ch.querySelector('input'),lib=document.getElementById('libelle-nom');
   function maj(){var on=cb.checked;ch.hidden=!on;ent.disabled=!on;ent.required=on;lib.textContent=on?'Prénom et nom du contact':'Prénom et nom';if(!on)ent.value='';}
   cb.addEventListener('change',maj);
-  var de=document.getElementById('date-evenement'),d=new Date();d.setDate(d.getDate()+5);
+  var de=document.getElementById('date-evenement'),d=new Date();d.setDate(d.getDate()+7);
   function iso(x){return x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0')}
   var min=iso(d);
   de.min=min;
-  // Date par défaut : le premier samedi qui respecte le délai de 5 jours
+  // Date par défaut : le premier samedi qui respecte le délai de 7 jours
   var sam=new Date(d);while(sam.getDay()!==6)sam.setDate(sam.getDate()+1);
   de.defaultValue=iso(sam);de.value=iso(sam);
   var aide=document.getElementById('aide-date');
-  function verif(){var bad=!!(de.value&&de.value<min);de.setCustomValidity(bad?'Choisissez une date au moins 5 jours à l\u2019avance. Pour un besoin urgent, contactez-nous par texto ou appel.':'');de.classList.toggle('invalide',bad);aide.classList.toggle('alerte',bad)}
+  function verif(){var bad=!!(de.value&&de.value<min);de.setCustomValidity(bad?'Choisissez une date au moins 7 jours à l\u2019avance. Pour un besoin urgent, contactez-nous par texto ou appel.':'');de.classList.toggle('invalide',bad);aide.classList.toggle('alerte',bad)}
   de.addEventListener('input',verif);de.addEventListener('change',verif);
 
   // Prix selon le forfait et la durée (prix 2026-2027) : modifier ici au besoin
@@ -89,7 +89,7 @@
       if(!el.willValidate||el.checkValidity()){if(el.willValidate)marquer(el,false);return}
       marquer(el,true);
       if(!premier)premier=el;
-      var n=el===de&&de.value?'date (au moins 5 jours à l\u2019avance)':nomChamp(el);
+      var n=el===de&&de.value?'date (au moins 7 jours à l\u2019avance)':nomChamp(el);
       if(!vus[n]){vus[n]=1;manquants.push(n)}
     });
     if(premier){
