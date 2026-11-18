@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://api.web3forms.com; form-action https://api.web3forms.com; base-uri 'self'; object-src 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <title>Le Repère — Votre repère technique | Sonorisation et services audiovisuels à Québec</title>
 <meta name="description" content="Votre repère technique. Sonorisation et services audiovisuels à Québec, Lévis et environs. Forfaits tout inclus à partir de 395 $.">
 <meta property="og:title" content="Le Repère — Votre repère technique">
@@ -171,6 +173,7 @@ section.bloc{padding:96px 0}
 .statut.ok{display:block;background:#EAF1E3;color:var(--vert)}
 .statut.erreur{display:block;background:#FBF4EA;color:var(--orange)}
 .statut a{color:inherit}
+.confid{font-size:12.5px;color:var(--gris);text-align:center;line-height:1.45;max-width:none;opacity:1}
 .aide-champ.alerte{color:var(--orange);font-weight:600}
 .aide-champ a{color:inherit;font-weight:600}
 .aide-champ[hidden]{display:none}
@@ -356,7 +359,7 @@ footer img{height:30px}
           <small class="aide-champ large" id="aide-date">Au moins 5 jours à l'avance. La date n'est pas garantie : on vous confirme sa disponibilité par courriel. Plus urgent ? Contactez-nous par <a href="sms:+14504211285">texto</a>, <a href="tel:+14504211285">appel</a> ou <a href="mailto:contact@lerepere.info?subject=Demande%20sp%C3%A9ciale">courriel</a>.</small>
           <label><span>Durée approximative</span><select name="Durée approximative" id="duree" required>
             <option value="" disabled>Choisir…</option>
-            <option data-p="base">1 h</option><option data-p="base">2 h</option><option data-p="base">3 h</option><option data-p="base">4 h et plus</option><option data-p="base" selected>1 journée</option><option data-p="j2">2 jours</option><option data-p="sem">3 à 7 jours</option><option data-p="plus">Plus de 7 jours</option>
+            <option data-p="base" data-j="1" selected>1 journée</option><option data-p="j2" data-j="2">2 jours</option><option data-p="sem" data-j="3">3 à 7 jours</option><option data-p="plus" data-j="8">Plus de 7 jours</option>
           </select></label>
           <label><span>Taille de l'audience</span><select name="Taille de l'audience" id="audience" required>
             <option value="" disabled>Choisir…</option>
@@ -392,6 +395,7 @@ footer img{height:30px}
       <div class="estimation" id="estimation" hidden></div>
       <button type="submit" class="btn btn-orange">Envoyer ma demande →</button>
       <p class="statut" id="statut" role="status" aria-live="polite"></p>
+      <p class="confid">🔒 Vos renseignements servent uniquement à préparer votre soumission. Ils nous sont transmis par courriel (service Web3Forms) et ne sont jamais vendus ni partagés.</p>
     </form>
   </div>
 </section>
@@ -405,112 +409,6 @@ footer img{height:30px}
   </div>
 </footer>
 
-<script>
-(function(){
-  var f=document.getElementById('formulaire'),st=document.getElementById('statut'),btn=f.querySelector('button');
-  var cb=document.getElementById('est-entreprise'),ch=document.getElementById('champ-entreprise'),ent=ch.querySelector('input'),lib=document.getElementById('libelle-nom');
-  function maj(){var on=cb.checked;ch.hidden=!on;ent.disabled=!on;ent.required=on;lib.textContent=on?'Prénom et nom du contact':'Prénom et nom';if(!on)ent.value='';}
-  cb.addEventListener('change',maj);
-  var de=document.getElementById('date-evenement'),d=new Date();d.setDate(d.getDate()+5);
-  function iso(x){return x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0')}
-  var min=iso(d);
-  de.min=min;
-  // Date par défaut : le premier samedi qui respecte le délai de 5 jours
-  var sam=new Date(d);while(sam.getDay()!==6)sam.setDate(sam.getDate()+1);
-  de.defaultValue=iso(sam);de.value=iso(sam);
-  var aide=document.getElementById('aide-date');
-  function verif(){var bad=!!(de.value&&de.value<min);de.setCustomValidity(bad?'Choisissez une date au moins 5 jours à l\u2019avance. Pour un besoin urgent, contactez-nous par texto ou appel.':'');de.classList.toggle('invalide',bad);aide.classList.toggle('alerte',bad)}
-  de.addEventListener('input',verif);de.addEventListener('change',verif);
-
-  // Prix selon le forfait et la durée (prix 2026-2027) : modifier ici au besoin
-  var PRIX={
-    // base = 1 jour · j2 = 2 jours · sem = 3 à 7 jours. Durée absente = sur soumission (plus de 7 jours : toujours sur soumission)
-    dj:  {nom:'DJ / party',base:[395,'/ événement'],j2:[465,'fin de semaine, 2 jours'],sem:[600,'semaine, 3 à 7 jours']},
-    conf:{nom:'Conférence / corporatif',base:[665,'/ événement'],j2:[1130,'2 jours']},
-    trio:{nom:'Spectacle trio musical',base:[1150,'/ événement']},
-    perso:{nom:'Forfait personnalisé'}
-  };
-  var du=document.getElementById('duree'),est=document.getElementById('estimation'),pa=document.getElementById('prix-affiche');
-  function m(n){return n.toLocaleString('fr-CA')+' $'}
-  function opt(){return du.options[du.selectedIndex]||{dataset:{}}}
-  var au=document.getElementById('audience'),aideAu=document.getElementById('aide-audience');
-  function grosse(){var o=au.options[au.selectedIndex];return !!(o&&o.dataset.grosse)}
-  var chEst=document.getElementById('champ-estimation'),auEst=document.getElementById('audience-estimee');
-  function majAudience(){var g=grosse();aideAu.hidden=!g;aideAu.classList.toggle('alerte',g);au.classList.toggle('attention',g);
-    chEst.hidden=!g;auEst.disabled=!g;auEst.required=g;if(!g){auEst.value='';marquer(auEst,false)}}
-  au.addEventListener('change',majAudience);
-  var ext=document.getElementById('exterieur'),aideExt=document.getElementById('aide-exterieur');
-  function majExt(){aideExt.hidden=!ext.checked}
-  ext.addEventListener('change',majExt);
-  function prix(cle){var p=PRIX[cle],c=opt().dataset.p||'base';if(grosse())return null;return p&&p[c]?{v:p[c][0],u:p[c][1],dep:false}:null}
-  function majPrix(){
-    f.querySelectorAll('input[name=Forfait]').forEach(function(r){
-      var x=prix(r.dataset.cle),el=r.parentNode.querySelector('.px');
-      if(el)el.innerHTML=x?m(x.v)+(x.u.charAt(0)==='/'?'':' <em class="u">'+x.u+'</em>'):'Sur soumission';
-    });
-    var r=f.querySelector('input[name=Forfait]:checked');
-    if(!r){est.hidden=true;pa.value='';return}
-    var x=prix(r.dataset.cle),nom=PRIX[r.dataset.cle].nom;
-    est.hidden=false;
-    if(x){
-      est.innerHTML='Prix estimé : '+(x.dep?'à partir de ':'')+'<b class="m">'+m(x.v)+'</b> '+(x.u.charAt(0)==='/'?x.u:'('+x.u+')')+'<small>'+nom+' · tout inclus, aucune taxe · prix 2026-2027. Le prix final est confirmé dans votre soumission.</small>';
-      pa.value=(x.dep?'À partir de ':'')+m(x.v)+' ('+(x.u.charAt(0)==='/'?'1 événement':x.u)+') · '+nom+' · prix 2026-2027';
-    }else{
-      var raison=grosse()?'audience de plus de 150 personnes':'';
-      est.innerHTML='Prix estimé : <b class="m">sur soumission</b><small>'+nom+(raison?' · '+raison:'')+' · on vous prépare un prix selon vos besoins.</small>';
-      pa.value='Sur soumission · '+nom+(raison?' ('+raison+')':'');
-    }
-  }
-  f.addEventListener('change',majPrix);
-  majPrix();
-
-  function nomChamp(el){
-    if(el.type==='radio')return 'forfait souhaité';
-    var l=el.closest('label'),sp=l&&l.querySelector('span');
-    return sp?sp.childNodes[0].textContent.trim().toLowerCase():el.name;
-  }
-  function marquer(el,on){var c=el.type==='radio'?el.closest('.choix'):el;if(c)c.classList.toggle('invalide',on)}
-  f.addEventListener('input',function(e){if(e.target.checkValidity&&e.target.checkValidity())marquer(e.target,false)});
-  f.addEventListener('change',function(e){if(e.target.checkValidity&&e.target.checkValidity())marquer(e.target,false)});
-
-  f.addEventListener('submit',function(e){
-    e.preventDefault();
-    verif();
-    var manquants=[],premier=null,vus={};
-    Array.prototype.forEach.call(f.elements,function(el){
-      if(!el.willValidate||el.checkValidity()){if(el.willValidate)marquer(el,false);return}
-      marquer(el,true);
-      if(!premier)premier=el;
-      var n=el===de&&de.value?'date (au moins 5 jours à l\u2019avance)':nomChamp(el);
-      if(!vus[n]){vus[n]=1;manquants.push(n)}
-    });
-    if(premier){
-      st.className='statut erreur';
-      st.textContent='Il manque des informations ou une information est invalide : '+manquants.join(', ')+'.';
-      if(!de.checkValidity()&&de.value)st.innerHTML+='<br>Pour une date plus rapprochée, contactez-nous par <a href="sms:+14504211285">texto</a>, <a href="tel:+14504211285">appel</a> ou <a href="mailto:contact@lerepere.info?subject=Demande%20sp%C3%A9ciale">courriel</a>.';
-      var cible=premier.type==='radio'?premier.closest('fieldset'):premier.closest('label')||premier;
-      cible.scrollIntoView({behavior:'smooth',block:'center'});
-      try{premier.focus({preventScroll:true})}catch(_){}
-      return;
-    }
-    btn.disabled=true;btn.textContent='Envoi en cours…';st.className='statut';
-    fetch(f.action,{method:'POST',headers:{'Accept':'application/json'},body:(function(){var fd=new FormData(f);fd.set('Événement extérieur',ext.checked?'Oui':'Non');return fd})()})
-      .then(function(r){return r.json()})
-      .then(function(d){
-        if(!d.success)throw new Error(d.message);
-        f.reset();
-        document.getElementById('est-entreprise').dispatchEvent(new Event('change'));
-        majAudience();majExt();majPrix();
-        st.className='statut ok';
-        st.textContent='Merci ! Votre demande est bien envoyée. On vérifie la disponibilité de la date et on vous répond rapidement par courriel.';
-      })
-      .catch(function(){
-        st.className='statut erreur';
-        st.innerHTML='Oups, l’envoi n’a pas fonctionné. Écrivez-nous directement à <a href="mailto:contact@lerepere.info?subject=Demande%20de%20soumission">contact@lerepere.info</a>.';
-      })
-      .finally(function(){btn.disabled=false;btn.textContent='Envoyer ma demande →'});
-  });
-})();
-</script>
+<script src="assets/site.js"></script>
 </body>
 </html>

@@ -1,0 +1,27 @@
+name: Tests
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    name: Tests du site
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+      - name: Installer les dépendances
+        run: npm install --no-audit --no-fund
+      - name: Installer les navigateurs (Chrome et Safari/WebKit)
+        run: npx playwright install --with-deps chromium webkit
+      - name: Lancer les tests
+        run: npx playwright test
