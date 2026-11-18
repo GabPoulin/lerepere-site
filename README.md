@@ -1,4 +1,4 @@
-# lerepere.info — site du Repère
+# lerepere.info — site pour Le Repère
 
 Site d'une page de **Le Repère** (sonorisation et services audiovisuels, Québec et Lévis), publié
 avec GitHub Pages à https://lerepere.info.
