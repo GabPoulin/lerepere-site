@@ -335,7 +335,7 @@ footer img{height:30px}
         <label><span>Heure de début</span><input type="time" name="Heure de début" required></label>
         <label><span>Durée approximative</span><select name="Durée approximative" id="duree" required>
           <option value="" disabled selected>Choisir…</option>
-          <option data-p="base">1 h</option><option data-p="base">2 h</option><option data-p="base">3 h</option><option data-p="base">4 h et plus</option><option data-p="base">1 journée</option><option data-p="j2">2 jours et plus</option><option data-p="sem">1 semaine ou plus</option>
+          <option data-p="base">1 h</option><option data-p="base">2 h</option><option data-p="base">3 h</option><option data-p="base">4 h et plus</option><option data-p="base">1 journée</option><option data-p="j2">2 jours</option><option data-p="sem" data-n="1">3 à 7 jours (1 semaine)</option><option data-p="sem" data-n="2">8 à 14 jours (2 semaines)</option><option data-p="sem" data-n="3">15 à 21 jours (3 semaines)</option><option data-p="sem" data-n="4" data-plus="1">22 jours et plus (4 semaines et plus)</option>
         </select></label>
         <label><span>Lieu de l'événement</span><input type="text" name="Lieu" placeholder="Salle, ville" required></label>
         <label><span>Taille de l'audience</span><input type="number" name="Taille de l'audience" min="1" inputmode="numeric" placeholder="Nombre de personnes" required></label>
@@ -373,27 +373,30 @@ footer img{height:30px}
 
   // Prix selon le forfait et la durée (prix 2026-2027) : modifier ici au besoin
   var PRIX={
-    dj:  {nom:'DJ / party',base:[395,'/ événement'],j2:[465,'fin de semaine'],sem:[600,'semaine']},
-    conf:{nom:'Conférence / corporatif',base:[665,'/ événement'],j2:[1130,'2 jours'],sem:[2375,'5 jours']},
+    // base = 1 jour · j2 = 2 jours · sem = par semaine (3 jours et plus, chaque semaine commencée est facturée)
+    dj:  {nom:'DJ / party',base:[395,'/ événement'],j2:[465,'fin de semaine, 2 jours'],sem:[600,'semaine']},
+    conf:{nom:'Conférence / corporatif',base:[665,'/ événement'],j2:[1130,'2 jours'],sem:[2375,'semaine']},
     trio:{nom:'Spectacle trio musical',base:[1150,'/ événement']},
     perso:{nom:'Forfait personnalisé'}
   };
   var du=document.getElementById('duree'),est=document.getElementById('estimation'),pa=document.getElementById('prix-affiche');
   function m(n){return n.toLocaleString('fr-CA')+' $'}
-  function cat(){var o=du.options[du.selectedIndex];return (o&&o.dataset.p)||'base'}
-  function prix(cle){var p=PRIX[cle],c=cat();return p&&p[c]?{v:p[c][0],u:p[c][1],dep:c!=='base'}:null}
+  function opt(){return du.options[du.selectedIndex]||{dataset:{}}}
+  function prix(cle){var p=PRIX[cle],o=opt().dataset,c=o.p||'base',n=+(o.n||1);if(!p||!p[c])return null;
+    var u=c==='sem'?(n>1?n+' semaines × '+m(p.sem[0]):'1 semaine'):p[c][1];
+    return {v:p[c][0]*n,u:u,dep:!!o.plus}}
   function majPrix(){
     f.querySelectorAll('input[name=Forfait]').forEach(function(r){
       var x=prix(r.dataset.cle),el=r.parentNode.querySelector('.px');
-      if(el)el.textContent=x?(x.dep?'À partir de ':'')+m(x.v)+(x.dep?' ('+x.u+')':''):'Sur soumission';
+      if(el)el.textContent=x?(x.dep?'À partir de ':'')+m(x.v)+(x.u.charAt(0)==='/'?'':' ('+x.u+')'):'Sur soumission';
     });
     var r=f.querySelector('input[name=Forfait]:checked');
     if(!r){est.hidden=true;pa.value='';return}
     var x=prix(r.dataset.cle),nom=PRIX[r.dataset.cle].nom;
     est.hidden=false;
     if(x){
-      est.innerHTML='Prix estimé : '+(x.dep?'à partir de ':'')+'<b class="m">'+m(x.v)+'</b> '+(x.dep?'('+x.u+')':x.u)+'<small>'+nom+' · tout inclus, aucune taxe · prix 2026-2027. Le prix final est confirmé dans votre soumission.</small>';
-      pa.value=(x.dep?'À partir de ':'')+m(x.v)+' ('+(x.dep?x.u:'1 événement')+') · '+nom+' · prix 2026-2027';
+      est.innerHTML='Prix estimé : '+(x.dep?'à partir de ':'')+'<b class="m">'+m(x.v)+'</b> '+(x.u.charAt(0)==='/'?x.u:'('+x.u+')')+'<small>'+nom+' · tout inclus, aucune taxe · prix 2026-2027. Le prix final est confirmé dans votre soumission.</small>';
+      pa.value=(x.dep?'À partir de ':'')+m(x.v)+' ('+(x.u.charAt(0)==='/'?'1 événement':x.u)+') · '+nom+' · prix 2026-2027';
     }else{
       est.innerHTML='Prix estimé : <b class="m">sur soumission</b><small>'+nom+' · on vous prépare un prix selon vos besoins.</small>';
       pa.value='Sur soumission · '+nom;
