@@ -139,12 +139,15 @@ section.bloc{padding:96px 0}
 .champs{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
 .champs .large{grid-column:1/-1}
 .champs label{display:grid;gap:6px}
-.formulaire input:not([type=radio]),.formulaire textarea{font:inherit;font-size:16px;color:var(--charbon);border:1.5px solid var(--ligne);border-radius:10px;padding:12px 14px;background:#fff;width:100%}
+.formulaire input:not([type=radio]):not([type=checkbox]),.formulaire textarea{font:inherit;font-size:16px;color:var(--charbon);border:1.5px solid var(--ligne);border-radius:10px;padding:12px 14px;background:#fff;width:100%}
 .formulaire textarea{min-height:120px;resize:vertical}
 .champs label{min-width:0}
+.formulaire .champs label.case{display:flex;align-items:center;gap:10px;font-size:15px;cursor:pointer;color:var(--charbon)}
+.case input{accent-color:var(--orange);width:18px;height:18px;flex:none}
+.champs label[hidden]{display:none}
 .formulaire input[type=date]{-webkit-appearance:none;appearance:none;display:block;min-width:0;max-width:100%;min-height:50px;text-align:left}
 .formulaire input[type=date]::-webkit-date-and-time-value{text-align:left}
-.formulaire input:not([type=radio]):focus,.formulaire textarea:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(158,90,0,.15)}
+.formulaire input:not([type=radio]):not([type=checkbox]):focus,.formulaire textarea:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(158,90,0,.15)}
 .formulaire button{justify-self:start;cursor:pointer;font-size:15px}
 .formulaire button:disabled{opacity:.6;cursor:wait}
 .formulaire .piege{position:absolute;left:-9999px}
@@ -318,7 +321,9 @@ footer img{height:30px}
       </fieldset>
 
       <div class="champs">
-        <label><span>Prénom et nom</span><input type="text" name="Prénom et nom" autocomplete="name" required></label>
+        <label class="large case"><input type="checkbox" id="est-entreprise"> Je fais la demande pour une entreprise</label>
+        <label class="large" id="champ-entreprise" hidden><span>Nom de l'entreprise</span><input type="text" name="Entreprise" autocomplete="organization" disabled></label>
+        <label><span id="libelle-nom">Prénom et nom</span><input type="text" name="Prénom et nom" autocomplete="name" required></label>
         <label><span>Courriel</span><input type="email" name="email" autocomplete="email" required></label>
         <label><span>Téléphone <em class="opt">(facultatif)</em></span><input type="tel" name="Téléphone" autocomplete="tel"></label>
         <label><span>Date de l'événement</span><input type="date" name="Date de l'événement" required></label>
@@ -344,6 +349,11 @@ footer img{height:30px}
 
 <script>
 (function(){
+  var cb=document.getElementById('est-entreprise'),ch=document.getElementById('champ-entreprise'),ent=ch.querySelector('input'),lib=document.getElementById('libelle-nom');
+  function maj(){var on=cb.checked;ch.hidden=!on;ent.disabled=!on;ent.required=on;lib.textContent=on?'Prénom et nom du contact':'Prénom et nom';if(!on)ent.value='';}
+  cb.addEventListener('change',maj);
+})();
+(function(){
   var f=document.getElementById('formulaire'),st=document.getElementById('statut'),btn=f.querySelector('button');
   f.addEventListener('submit',function(e){
     e.preventDefault();
@@ -353,6 +363,7 @@ footer img{height:30px}
       .then(function(d){
         if(!d.success)throw new Error(d.message);
         f.reset();
+        document.getElementById('est-entreprise').dispatchEvent(new Event('change'));
         st.className='statut ok';
         st.textContent='Merci ! Votre demande est bien envoyée. On vous répond rapidement par courriel.';
       })
