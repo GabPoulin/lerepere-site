@@ -352,15 +352,15 @@ footer img{height:30px}
         <h4><span class="num">2</span> Votre événement</h4>
         <div class="champs">
           <label><span>Date</span><input type="date" name="Date de l'événement" id="date-evenement" required></label>
-          <label><span>Heure de début</span><input type="time" name="Heure de début" required></label>
+          <label><span>Heure de début</span><input type="time" name="Heure de début" value="19:00" required></label>
           <small class="aide-champ large" id="aide-date">Au moins 5 jours à l'avance. La date n'est pas garantie : on vous confirme sa disponibilité par courriel. Plus urgent ? Contactez-nous par <a href="sms:+14504211285">texto</a>, <a href="tel:+14504211285">appel</a> ou <a href="mailto:contact@lerepere.info?subject=Demande%20sp%C3%A9ciale">courriel</a>.</small>
           <label><span>Durée approximative</span><select name="Durée approximative" id="duree" required>
-            <option value="" disabled selected>Choisir…</option>
-            <option data-p="base">1 h</option><option data-p="base">2 h</option><option data-p="base">3 h</option><option data-p="base">4 h et plus</option><option data-p="base">1 journée</option><option data-p="j2">2 jours</option><option data-p="sem">3 à 7 jours</option><option data-p="plus">Plus de 7 jours</option>
+            <option value="" disabled>Choisir…</option>
+            <option data-p="base">1 h</option><option data-p="base">2 h</option><option data-p="base">3 h</option><option data-p="base">4 h et plus</option><option data-p="base" selected>1 journée</option><option data-p="j2">2 jours</option><option data-p="sem">3 à 7 jours</option><option data-p="plus">Plus de 7 jours</option>
           </select></label>
           <label><span>Taille de l'audience</span><select name="Taille de l'audience" id="audience" required>
-            <option value="" disabled selected>Choisir…</option>
-            <option>50 personnes et moins</option><option>150 personnes et moins</option><option data-grosse="1">Plus de 150 personnes</option>
+            <option value="" disabled>Choisir…</option>
+            <option>50 personnes et moins</option><option selected>150 personnes et moins</option><option data-grosse="1">Plus de 150 personnes</option>
           </select></label>
           <small class="aide-champ large" id="aide-audience" hidden>Audience de plus de 150 personnes : le prix est établi sur soumission, selon vos besoins.</small>
           <label class="large" id="champ-estimation" hidden><span>Audience estimée</span><input type="number" name="Audience estimée" id="audience-estimee" min="151" inputmode="numeric" placeholder="Nombre de personnes" disabled></label>
@@ -412,8 +412,12 @@ footer img{height:30px}
   function maj(){var on=cb.checked;ch.hidden=!on;ent.disabled=!on;ent.required=on;lib.textContent=on?'Prénom et nom du contact':'Prénom et nom';if(!on)ent.value='';}
   cb.addEventListener('change',maj);
   var de=document.getElementById('date-evenement'),d=new Date();d.setDate(d.getDate()+5);
-  var min=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  function iso(x){return x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0')}
+  var min=iso(d);
   de.min=min;
+  // Date par défaut : le premier samedi qui respecte le délai de 5 jours
+  var sam=new Date(d);while(sam.getDay()!==6)sam.setDate(sam.getDate()+1);
+  de.defaultValue=iso(sam);de.value=iso(sam);
   var aide=document.getElementById('aide-date');
   function verif(){var bad=!!(de.value&&de.value<min);de.setCustomValidity(bad?'Choisissez une date au moins 5 jours à l\u2019avance. Pour un besoin urgent, contactez-nous par texto ou appel.':'');de.classList.toggle('invalide',bad);aide.classList.toggle('alerte',bad)}
   de.addEventListener('input',verif);de.addEventListener('change',verif);
@@ -458,6 +462,7 @@ footer img{height:30px}
     }
   }
   f.addEventListener('change',majPrix);
+  majPrix();
 
   function nomChamp(el){
     if(el.type==='radio')return 'forfait souhaité';
