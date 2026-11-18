@@ -325,7 +325,7 @@ footer img{height:30px}
         <label><span id="libelle-nom">Prénom et nom</span><input type="text" name="Prénom et nom" autocomplete="name" required></label>
         <label><span>Courriel</span><input type="email" name="email" autocomplete="email" required></label>
         <label><span>Téléphone <em class="opt">(facultatif)</em></span><input type="tel" name="Téléphone" autocomplete="tel"></label>
-        <label><span>Date de l'événement</span><input type="date" name="Date de l'événement" id="date-evenement" required><small class="aide-champ">Au moins 3 jours à l'avance. Plus urgent ? Texto ou appel.</small></label>
+        <label><span>Date de l'événement</span><input type="date" name="Date de l'événement" id="date-evenement" required><small class="aide-champ">Au moins 3 jours à l'avance. La date n'est pas garantie : on vous confirme sa disponibilité par courriel. Plus urgent ? Texto ou appel.</small></label>
         <label><span>Lieu de l'événement</span><input type="text" name="Lieu" placeholder="Salle, ville" required></label>
         <label><span>Nombre d'invités <em class="opt">(public)</em></span><input type="number" name="Nombre d'invités" min="1" inputmode="numeric" required></label>
         <label class="large"><span>Vos besoins</span><textarea name="Besoins" placeholder="Type d'événement, horaire, nombre de micros, musiciens, questions…"></textarea></label>
@@ -370,7 +370,7 @@ footer img{height:30px}
         f.reset();
         document.getElementById('est-entreprise').dispatchEvent(new Event('change'));
         st.className='statut ok';
-        st.textContent='Merci ! Votre demande est bien envoyée. On vous répond rapidement par courriel.';
+        st.textContent='Merci ! Votre demande est bien envoyée. On vérifie la disponibilité de la date et on vous répond rapidement par courriel.';
       })
       .catch(function(){
         st.className='statut erreur';
