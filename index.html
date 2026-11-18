@@ -325,7 +325,7 @@ footer img{height:30px}
         <label><span id="libelle-nom">Prénom et nom</span><input type="text" name="Prénom et nom" autocomplete="name" required></label>
         <label><span>Courriel</span><input type="email" name="email" autocomplete="email" required></label>
         <label><span>Téléphone <em class="opt">(facultatif)</em></span><input type="tel" name="Téléphone" autocomplete="tel"></label>
-        <label><span>Date de l'événement</span><input type="date" name="Date de l'événement" required></label>
+        <label><span>Date de l'événement</span><input type="date" name="Date de l'événement" id="date-evenement" required><small class="aide-champ">Au moins 3 jours à l'avance. Plus urgent ? Texto ou appel.</small></label>
         <label><span>Lieu de l'événement</span><input type="text" name="Lieu" placeholder="Salle, ville" required></label>
         <label><span>Nombre d'invités <em class="opt">(public)</em></span><input type="number" name="Nombre d'invités" min="1" inputmode="numeric" required></label>
         <label class="large"><span>Vos besoins</span><textarea name="Besoins" placeholder="Type d'événement, horaire, nombre de micros, musiciens, questions…"></textarea></label>
@@ -352,6 +352,11 @@ footer img{height:30px}
   var cb=document.getElementById('est-entreprise'),ch=document.getElementById('champ-entreprise'),ent=ch.querySelector('input'),lib=document.getElementById('libelle-nom');
   function maj(){var on=cb.checked;ch.hidden=!on;ent.disabled=!on;ent.required=on;lib.textContent=on?'Prénom et nom du contact':'Prénom et nom';if(!on)ent.value='';}
   cb.addEventListener('change',maj);
+  var de=document.getElementById('date-evenement'),d=new Date();d.setDate(d.getDate()+3);
+  var min=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  de.min=min;
+  function verif(){de.setCustomValidity(de.value&&de.value<min?'Choisissez une date au moins 3 jours à l\u2019avance. Pour un besoin urgent, contactez-nous par texto ou appel.':'')}
+  de.addEventListener('input',verif);de.addEventListener('change',verif);
 })();
 (function(){
   var f=document.getElementById('formulaire'),st=document.getElementById('statut'),btn=f.querySelector('button');
