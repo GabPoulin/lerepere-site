@@ -76,6 +76,7 @@ Chaque pull request et chaque mise à jour de `main` lancent les tests dans GitH
 dans Chrome (ordinateur et iPhone) et dans Safari/WebKit (iPhone) :
 
 - la page se charge sans erreur, sans défilement horizontal, sans numéro de téléphone en clair ;
+- texto et appel sont offerts sur téléphone seulement ; sur ordinateur, seulement le courriel ;
 - la politique de sécurité (CSP) ne bloque rien et les liens « nouvel onglet » sont protégés ;
 - le bouton PDF pointe vers un fichier présent dans le dépôt ;
 - les valeurs par défaut du formulaire (samedi, 19 h, 1 journée, 150 personnes et moins) ;

@@ -76,6 +76,23 @@ test.describe('Page', () => {
     await expect(page.locator('a[href^="tel:"]').first()).toBeAttached();
   });
 
+  test('texto et appel sur téléphone seulement, courriel seulement sur ordinateur', async ({ page, isMobile }) => {
+    await ouvrir(page);
+    const rapide = page.locator('.rapide');
+    if (isMobile) {
+      await expect(rapide.locator('a[href^="sms:"]')).toBeVisible();
+      await expect(rapide.locator('a[href^="tel:"]')).toBeVisible();
+      await expect(page.locator('#aide-date a[href^="sms:"]')).toBeVisible();
+    } else {
+      await expect(rapide.locator('a[href^="sms:"]')).toBeHidden();
+      await expect(rapide.locator('a[href^="tel:"]')).toBeHidden();
+      await expect(rapide.locator('a[href^="mailto:"]')).toBeVisible();
+      expect(await rapide.innerText()).toBe('Pour une question rapide, écrivez-nous');
+      expect(await page.locator('#aide-date').innerText()).toContain('Contactez-nous par courriel.');
+      await expect(page.locator('#aide-date a[href^="tel:"]')).toBeHidden();
+    }
+  });
+
   test('le bouton PDF pointe vers un fichier présent dans le dépôt', async ({ page }) => {
     await ouvrir(page);
     const href = await page.locator('a', { hasText: 'Télécharger la fiche des forfaits' }).getAttribute('href');

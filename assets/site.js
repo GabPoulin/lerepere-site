@@ -95,7 +95,7 @@
     if(premier){
       st.className='statut erreur';
       st.textContent='Il manque des informations ou une information est invalide : '+manquants.join(', ')+'.';
-      if(!de.checkValidity()&&de.value)st.innerHTML+='<br>Pour une date plus rapprochée, contactez-nous par <a href="sms:+14504211285">texto</a>, <a href="tel:+14504211285">appel</a> ou <a href="mailto:contact@lerepere.info?subject=Demande%20sp%C3%A9ciale">courriel</a>.';
+      if(!de.checkValidity()&&de.value)st.innerHTML+='<br>Pour une date plus rapprochée, contactez-nous par <span class="mobile-seul"><a href="sms:+14504211285">texto</a>, <a href="tel:+14504211285">appel</a> ou </span><a href="mailto:contact@lerepere.info?subject=Demande%20sp%C3%A9ciale">courriel</a>.';
       var cible=premier.type==='radio'?premier.closest('fieldset'):premier.closest('label')||premier;
       cible.scrollIntoView({behavior:'smooth',block:'center'});
       try{premier.focus({preventScroll:true})}catch(_){}
