@@ -1,0 +1,11 @@
+{
+  "name": "lerepere-site",
+  "private": true,
+  "description": "Tests automatiques du site lerepere.info",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0"
+  }
+}

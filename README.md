@@ -22,3 +22,21 @@ Le Bio Site reste accessible à `bio.site/lereperesono` comme page de secours.
 ## Modifier un texte ou un prix
 
 Tout est dans `index.html`. Sur GitHub, ouvrez le fichier, cliquez le crayon, modifiez, puis **Commit changes**. Le site se met à jour en environ une minute.
+
+## Tests automatiques
+
+Chaque pull request (et chaque mise à jour de `main`) lance les tests du site dans GitHub Actions
+(onglet **Actions**, workflow **Tests**). Ils vérifient la page et le formulaire de soumission
+dans Chrome (ordinateur et iPhone) et dans Safari/WebKit (iPhone) :
+
+- la page se charge sans erreur, sans défilement horizontal, sans numéro de téléphone en clair ;
+- les valeurs par défaut du formulaire (samedi, 19 h, 1 journée, 150 personnes et moins) ;
+- le délai minimum de 5 jours et les liens texto, appel et courriel ;
+- les durées offertes et les prix estimés pour chaque forfait ;
+- l'audience de plus de 150 personnes, l'option entreprise et l'événement extérieur ;
+- l'envoi : tous les champs attendus sont transmis (l'envoi réel vers Web3Forms est simulé).
+
+Pour les lancer sur un ordinateur : `npm install`, `npx playwright install`, puis `npm test`.
+
+Les prix testés sont ceux de la table `PRIX` dans `index.html` : si les prix changent, mettre à jour
+la `grille` dans `tests/site.spec.js` en même temps.
